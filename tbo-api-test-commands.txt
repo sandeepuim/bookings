@@ -1,0 +1,125 @@
+# TBO API Testing with Curl Commands - Batch Processing Approach
+
+## Current Status: 
+## - TBO API endpoints are returning 404 errors
+## - Using enhanced mock data with 25 hotels to demonstrate batch processing
+## - Hotel details page now works with getHotelWithRooms() method
+
+## Test URLs for Mock Data:
+# Hotel Search Results (25 hotels): 
+http://localhost/bookings/hotel-results/?country_code=IN&city_code=418069&check_in=2025-09-28&check_out=2025-09-29&rooms=1&adults=1&children=0
+
+# Hotel Details Page:
+http://localhost/bookings/hotel-details/?hotel_code=HTL00004&check_in=2025-09-28&check_out=2025-09-29&rooms=1&adults=1&children=0
+
+## Real TBO API Tests (Currently returning 404):
+
+## 1. Test Hotel Code List API (Static API) - Get All Hotels for City
+curl -X POST "http://api.tbotechnology.in/hotelapi_v10/HotelCodeList" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic VEJPU3RhdGljQVBJVGVzdDpUYm9AMTE1MzA4MTg=" \
+  -d '{
+    "CityCode": "418069",
+    "IsDetailedResponse": true
+  }'
+
+## 2. Test Authentication API (Get Token)
+curl -X POST "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Authenticate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ClientId": "YOLANDATHTest",
+    "UserName": "YOLANDATHTest", 
+    "Password": "Yol@40360746",
+    "EndUserIp": "103.102.234.36"
+  }'
+
+## 3. Batch Hotel Search - First Batch (20 hotels)
+## Replace YOUR_TOKEN_HERE with token from step 2
+## Replace HOTEL_CODES_BATCH_1 with first 20 hotel codes from step 1
+curl -X POST "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "EndUserIp": "103.102.234.36",
+    "TokenId": "YOUR_TOKEN_HERE",
+    "CheckIn": "2025-09-28",
+    "CheckOut": "2025-09-29",
+    "HotelCodes": "HOTEL_CODES_BATCH_1",
+    "GuestNationality": "IN",
+    "PaxRooms": [
+      {
+        "Adults": 1,
+        "Children": 0,
+        "ChildrenAges": null
+      }
+    ],
+    "ResponseTime": 20,
+    "IsDetailedResponse": true,
+    "Filters": {
+      "Refundable": true,
+      "NoOfRooms": 1,
+      "MealType": 0,
+      "OrderBy": 0,
+      "StarRating": 28,
+      "HotelName": null
+    }
+  }'
+
+## 4. Batch Hotel Search - Second Batch (next 20 hotels)
+curl -X POST "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "EndUserIp": "103.102.234.36",
+    "TokenId": "YOUR_TOKEN_HERE",
+    "CheckIn": "2025-09-28",
+    "CheckOut": "2025-09-29",
+    "HotelCodes": "HOTEL_CODES_BATCH_2",
+    "GuestNationality": "IN",
+    "PaxRooms": [{"Adults": 1, "Children": 0}],
+    "ResponseTime": 20,
+    "IsDetailedResponse": true,
+    "Filters": {"Refundable": true, "NoOfRooms": 1, "MealType": 0, "OrderBy": 0, "StarRating": 28}
+  }'
+
+## PowerShell Batch Processing Example:
+
+# 1. Get Hotel Codes
+$hotelCodesResponse = Invoke-RestMethod -Uri "http://api.tbotechnology.in/hotelapi_v10/HotelCodeList" -Method Post -ContentType "application/json" -Headers @{"Authorization" = "Basic VEJPU3RhdGljQVBJVGVzdDpUYm9AMTE1MzA4MTg="} -Body '{"CityCode": "418069", "IsDetailedResponse": true}'
+
+# 2. Get Authentication Token
+$authResponse = Invoke-RestMethod -Uri "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Authenticate" -Method Post -ContentType "application/json" -Body '{"ClientId": "YOLANDATHTest", "UserName": "YOLANDATHTest", "Password": "Yol@40360746", "EndUserIp": "103.102.234.36"}'
+$token = $authResponse.TokenId
+
+# 3. Process hotels in batches
+$hotels = $hotelCodesResponse.Hotels
+$batchSize = 20
+$batches = @()
+for ($i = 0; $i -lt $hotels.Count; $i += $batchSize) {
+    $batch = $hotels[$i..($i + $batchSize - 1)]
+    $batches += ,@($batch | ForEach-Object { $_.HotelCode })
+}
+
+# 4. Search each batch
+foreach ($batch in $batches[0..4]) { # Process first 5 batches
+    $hotelCodes = $batch -join ","
+    $searchBody = @{
+        EndUserIp = "103.102.234.36"
+        TokenId = $token
+        CheckIn = "2025-09-28"
+        CheckOut = "2025-09-29"
+        HotelCodes = $hotelCodes
+        GuestNationality = "IN"
+        PaxRooms = @(@{Adults = 1; Children = 0})
+        ResponseTime = 20
+        IsDetailedResponse = $true
+        Filters = @{
+            Refundable = $true
+            NoOfRooms = 1
+            MealType = 0
+            OrderBy = 0
+            StarRating = 28
+        }
+    } | ConvertTo-Json -Depth 3
+    
+    $searchResult = Invoke-RestMethod -Uri "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search" -Method Post -ContentType "application/json" -Body $searchBody
+    Write-Host "Batch results: $($searchResult.HotelResult.Count) hotels"
+}

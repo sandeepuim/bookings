@@ -1,0 +1,1603 @@
+@charset "utf-8";
+
+/* ============================
+   Global Resets & Typography
+============================ */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: rgba(34, 34, 34, 1);
+    font-family: 'Manrope';
+}
+
+p {
+    line-height: 28px;
+    font-size: 16px;
+    margin: 0;
+    color: rgba(34, 34, 34, 1);
+    font-family: 'Manrope';
+}
+
+a {
+    text-decoration: none;
+    font-family: 'Manrope';
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Baskervville';
+    margin: 0;
+}
+
+h1 {
+    font-size: 64px;
+    line-height: 76px;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+h2 {
+    font-size: 45px;
+    line-height: 64px;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+h3 {
+    font-size: 40px;
+    line-height: 52px;
+    text-transform: capitalize;
+    font-weight: 400;
+}
+
+h4 {
+    font-size: 32px;
+    line-height: 44px;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+ul {
+    /* margin: 0 !important; */
+    padding: 0;
+    font-family: 'Manrope';
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a:hover {
+    text-decoration: none !important;
+    transition: 0.4s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none !important;
+}
+
+button:focus,
+textarea:focus,
+select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+/* ============================
+   Font Face Declarations
+============================ */
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Manrope Regular'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Regular.eot') format('embedded-opentype');
+}
+
+@font-face {
+    font-family: 'Manrope Bold';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Manrope Bold'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Bold.eot') format('embedded-opentype');
+}
+
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Manrope Regular'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Regular.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Regular.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Manrope Bold'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Bold.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Bold.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Bold.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 500;
+    src: url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Medium.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Medium.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-Medium.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 600;
+    src: url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-SemiBold.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-SemiBold.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Manrope-SemiBold.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Baskervville';
+    font-weight: normal;
+    font-style: normal;
+    src: url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Regular.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Regular.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Baskervville';
+    font-weight: 500;
+    font-style: normal;
+    src: url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Medium.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Medium.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Medium.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Baskervville';
+    font-weight: 600;
+    font-style: normal;
+    src: url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-SemiBold.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-SemiBold.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-SemiBold.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Baskervville';
+    font-weight: bold;
+    font-style: normal;
+    src: url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Bold.woff2') format('woff2'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Bold.woff') format('woff'),
+        url('https://yolandaholidays.com/wp-content/themes/YolandaHolidays/assets/fonts/Baskervville-Bold.ttf') format('truetype');
+    font-display: swap;
+}
+
+/*-----------------------*/
+
+.main-btn {
+    color: rgba(23, 129, 100, 1);
+    text-transform: capitalize;
+    cursor: pointer;
+    padding: 14px 40px;
+    text-transform: uppercase;
+    font-family: 'Manrope Bold';
+    border-radius: 30px;
+    border: 1px solid rgba(23, 129, 100, 1);
+    transition: ease-in-out 0.4s;
+    background: #ffffff;
+    font-size: 16px;
+    text-align: center;
+    display: inline-table;
+}
+
+.main-btn:hover {
+    background: rgba(23, 129, 100, 1);
+    color: #ffffff;
+}
+
+/* ============================
+   Forms
+============================ */
+
+input[type="text"],
+input[type="email"],
+input[type="nubmer"],
+input[type="date"],
+input[type="tel"],
+input[type="time"],
+select,
+textarea,
+input[type="file"] {
+    width: 100%;
+    background: #ffffff;
+    border: 0;
+    padding: 10px 12px;
+    color: #000000;
+    font-size: 16px;
+    border-radius: 10px;
+    font-family: 'Noto Serif';
+    border: 1px solid #949494;
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+    border: 1px solid #949494;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.justify-content-start {
+    justify-content: flex-start;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.flex-row-reverse {
+    flex-direction: row-reverse;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-start {
+    align-items: flex-start;
+}
+
+.align-items-end {
+    align-items: flex-end;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.un-listed {
+    list-style: none !important;
+}
+
+.d-none {
+    display: none;
+}
+
+.ms-auto {
+    margin-left: auto !important;
+}
+
+.mr-auto {
+    margin-right: auto !important;
+}
+
+.mx-auto {
+    margin: 0 auto !important;
+}
+
+.W-100 {
+    width: 100%;
+    flex-basis: 100%;
+}
+
+.mr-0 {
+    margin-right: 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mrt-100 {
+    margin-top: 70px;
+}
+
+.mrb-100 {
+    margin-bottom: 70px;
+}
+
+.pdt-100 {
+    padding-top: 70px;
+}
+
+.pdb-100 {
+    padding-bottom: 70px !important;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.me-3 {
+    margin-right: 15px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.p-0 {
+    padding: 0 !important;
+}
+
+.bg-none {
+    background: none !important;
+}
+
+.max-container {
+    max-width: 1490px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.pb-30 {
+    padding-bottom: 30px !important;
+}
+
+.pt-30 {
+    padding-top: 30px !important;
+}
+
+.pb-0 {
+    padding-bottom: 0 !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mt-0 {
+    margin-top: 0 !important;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.vh-100 {
+    height: 100vh;
+}
+
+/*-------------Home-----------*/
+.container {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 0 15px
+}
+
+.header_rw {
+    left: 0;
+    right: 0;
+    top: 10px;
+    z-index: 999;
+}
+
+.top_logo {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.navigation_bar ul li a {
+    color: #1B315D;
+    text-transform: capitalize;
+    font-size: 22px;
+    line-height: 24px;
+    transition: ease-in-out 0.4s;
+}
+
+.navigation_bar ul li a:hover {
+    color: #178164;
+}
+
+.navigation_bar ul li {
+    margin-right: 60px;
+}
+
+.navigation_bar ul li:last-child {
+    margin-right: 0px;
+}
+
+.home_bg {
+    height: 650px;
+}
+
+.home_bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.home_bg::after {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.3786764705882353) 0%, rgba(255, 255, 255, 0.3114495798319328) 40%, rgba(255, 255, 255, 0.7372198879551821) 80%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+}
+
+.boat_bg {
+    height: 650px;
+}
+
+.boat_bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.boat_bg::after {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.3786764705882353) 0%, rgba(255, 255, 255, 0.3114495798319328) 40%, rgba(255, 255, 255, 0.7372198879551821) 80%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+}
+
+.home_banner_content {
+    left: 0px;
+    bottom: 40px;
+    right: 0;
+    position: absolute;
+}
+
+.home_banner_text {
+    position: relative;
+    /* left: -255px; */
+    width: 53%;
+    margin-bottom: 80px;
+}
+
+.home_banner_text h1 {
+    color: #ffffff;
+    padding: 20px 0;
+     text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.home_banner_text h3 {
+    color: #ffffff;
+    font-family: 'Manrope';
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.main_slider {
+    flex-basis: 55%;
+    padding-left: 50px;
+}
+
+.slider_img {
+    overflow: hidden;
+    height: 401px;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.slider_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.destinaiton_name {
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    color: #ffffff;
+    text-transform: capitalize;
+    text-align: center;
+    padding: 15px;
+    z-index: 1;
+}
+
+.my_slider {
+    margin: 0;
+}
+
+/* .home_banner_content .container{max-width: 100%;padding: 0;} */
+.heading_left {
+    flex-basis: 40%;
+}
+
+.heading_left h3 {
+    color: rgba(23, 129, 100, 1);
+    font-size: 20px;
+    line-height: 32px;
+}
+
+.header_right {
+    flex-basis: 55%;
+}
+
+.outdoor_reception {
+    background: linear-gradient(0deg, rgba(246, 239, 230, 0) 0%, rgba(246, 239, 230, 1) 100%);
+    overflow: hidden;
+    z-index: 2;
+    padding-bottom: 100px;
+}
+
+.outdoor_reception::after {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/pattern-1.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    content: '';
+    background-size: cover;
+    width: 840px;
+    height: 883px;
+    z-index: -1;
+    top: -350px;
+    left: -377px;
+}
+
+.heading {
+    margin-bottom: 80px;
+}
+
+.outdoor_reception .outdoor_reception_list li {
+    flex-basis: 32.2%;
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 80px;
+}
+
+.outdoor_reception .outdoor_reception_list li img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: all 0.4s;
+}
+
+.outdoor_reception .outdoor_reception_list li:hover img {
+    transform: scale(1.1);
+}
+
+.outdoor_reception .outdoor_reception_list li:nth-child(2) {
+    margin-top: 0px;
+}
+
+.heading_sec p {
+    max-width: 992px;
+    padding: 50px 0;
+    margin: 0 auto;
+}
+
+.heading_sec h3 {
+    color: rgba(23, 129, 100, 1);
+    font-size: 20px;
+    line-height: 32px;
+}
+
+.introducing::after {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/pattern-2.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    content: '';
+    background-size: contain;
+    width: 300px;
+    height: 682px;
+    z-index: -1;
+    top: 0px;
+    right: 0px;
+}
+
+.introducing::before {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/pattern-3.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    content: '';
+    background-size: contain;
+    width: 349px;
+    height: 465px;
+    z-index: -1;
+    bottom: -100px;
+    left: 0px;
+}
+
+.introducing ul li {
+    flex-basis: 48.8%;
+    display: flex;
+    flex-direction: column;
+}
+
+.introducing_img {
+    height: 676px;
+    border-radius: 8px;
+}
+
+.introducing ul li p {
+    padding-top: 20px;
+}
+
+.introducing ul li:nth-child(2) {
+    flex-direction: column-reverse;
+}
+
+.introducing ul li:nth-child(2) p {
+    padding-bottom: 20px;
+    padding-top: 0;
+}
+
+.des_rw {
+    background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(202, 240, 248, 1) 100%);
+    padding: 100px 0;
+}
+
+.tab-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.tab-menu ul li {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+    text-align: center;
+}
+
+.tab-menu ul li a {
+    color: #1B315D;
+    text-transform: capitalize;
+    display: inline-block;
+    padding: 15px 26px;
+    display: block;
+    text-decoration: none;
+    transition: 0.5s all;
+    border-bottom: transparent;
+    font-size: 22px;
+    line-height: 28px;
+}
+
+.tab-menu ul li a:hover {
+    color: #1B315D;
+    text-decoration: none;
+    border-bottom: 4px solid #1B315D;
+}
+
+.tab-menu ul li a.active {
+    background: transparent;
+    color: #1B315D;
+    text-decoration: none;
+    border-bottom: 4px solid #1B315D;
+    font-weight: bold;
+}
+
+.tab-box {
+    display: none;
+}
+
+.tab-teaser {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.tab-main-box {
+    margin-top: -2px;
+    margin-top: 50px;
+}
+
+.tab-teaser .slider_img {
+    height: 266px;
+}
+
+.destinaiton_name::after {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    height: 180px;
+    z-index: -1;
+}
+
+.main_slider .owl-nav {
+    position: absolute;
+    right: 0;
+}
+
+.main_slider .owl-nav button:hover {
+    background: transparent !important;
+}
+
+.main_slider .owl-nav button {
+    margin: 18px 12px !important;
+}
+
+.main_slider .owl-nav button:last-child {
+    margin-right: 0 !important;
+}
+
+.main_slider .owl-nav button span {
+    color: transparent;
+}
+
+.main_slider .owl-nav button.owl-prev span {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/arrow-left.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 15px;
+    display: inline-table;
+}
+
+.main_slider .owl-nav button.owl-next span {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/arrow-right.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 15px;
+    display: inline-table;
+}
+
+.new_bx .slider_img {
+    height: 280px;
+}
+
+.news_name h3 {
+    color: rgba(23, 129, 100, 1);
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.news_name h3 a {
+    color: #222222;
+    transition: ease-in-out 0.4s;
+}
+
+.new_bx .news_name {
+    margin-top: 20px;
+}
+
+.new_bx:hover .news_name h3 a {
+    color: #178164;
+}
+
+.new_bx .news_name h3 {
+    font-family: 'Manrope';
+    font-weight: 400;
+}
+
+.zoom img {
+    transition: all 0.4s;
+}
+
+.zoom:hover img {
+    transform: scale(1.1);
+}
+
+.latest_news {
+    margin-bottom: 100px;
+    z-index: 2;
+}
+
+.heading h3 {
+    color: rgba(23, 129, 100, 1);
+    font-size: 20px;
+    line-height: 32px;
+    font-weight: bold;
+}
+
+.latest_news::after {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/patter-4.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    content: '';
+    background-size: contain;
+    width: 300px;
+    height: 682px;
+    z-index: -1;
+    top: 20px;
+    right: 0px;
+}
+
+
+.copyright {
+    margin-top: 110px;
+    background: #1B315D;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.copyright p,
+.copyright a {
+    color: #ffffff;
+}
+
+.header_rw.sticky {
+    position: fixed;
+    background: #ffffff;
+    top: 0;
+    /* padding: 10px 0; */
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.3);
+    transition: ease-in-out 0.2s;
+}
+
+.header_rw.sticky .top_logo img {
+    width: 70px;
+}
+
+.header_rw.sticky .top_logo {
+    margin-bottom: 0px;
+}
+
+.header_rw.sticky .header_inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* .home_banner_content .container {
+position: absolute;
+right: 0;
+padding-right: 0;
+bottom: 0;
+z-index: 2;
+} */
+
+.home_slider_mn {
+    width: 790px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+/*-----------Destination Managment-----------*/
+.destination_banner {
+    bottom: 70px;
+}
+
+.destination_banner .container {
+    position: relative;
+    padding-right: 15px;
+    left: 0;
+}
+
+.destination_banner .home_banner_text {
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.outdoor_reception .destination_list_text li:nth-child(2n+2) .heading {
+    flex-direction: row-reverse;
+}
+
+.outdoor_reception .destination_list_text li {
+    position: relative;
+    margin-bottom: 100px;
+    padding-bottom: 100px;
+}
+
+.outdoor_reception .destination_list_text li::after {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/border.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    content: '';
+    background-size: cover;
+    width: 1260px;
+    height: 2px;
+    bottom: 0px;
+    right: 0px;
+    left: 0;
+    margin: 0 auto;
+}
+
+.outdoor_reception .destination_list_text li:last-child::after {
+    display: none;
+}
+
+.outdoor_reception .destination_list_text li .heading {
+    margin-bottom: 0;
+}
+
+.outdoor_reception .destination_list_text li:last-child {
+    padding-bottom: 0;
+}
+
+.beach-rw {
+    background: url(https://yolandaholidays.com/wp-content/uploads/2025/02/bikini-beach.webp) no-repeat top center;
+    background-size: cover;
+    padding-top: 100px;
+    z-index: 2;
+}
+
+.beach-rw::after {
+    background: linear-gradient(180deg, rgba(27, 49, 93, 0.8) 0%, rgba(27, 49, 93, 0) 100%);
+    position: relative;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    position: absolute;
+    content: '';
+}
+
+.beach-rw .heading h2,
+.beach-rw .heading p {
+    color: #ffffff;
+}
+
+.beach-rw .heading p {
+    padding-bottom: 0;
+}
+
+.beach_form {
+    z-index: 2;
+}
+
+.ct_form {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 50px 70px;
+    box-shadow: 6px 6px 22px rgb(27, 49, 93, .44);
+}
+
+.ct_img {
+    height: 355px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+}
+
+.ct_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ct_form ul li {
+    flex-basis: 49.3%;
+    margin-bottom: 15px;
+}
+
+.ct_form ul li input[type="text"],
+.ct_form ul li input[type="email"],
+.ct_form ul li input[type="tel"],
+.ct_form ul li input[type="number"] {
+    border-color: rgb(34, 34, 34, 0.4);
+    font-family: 'Manrope';
+    height: 64px;
+    border-radius: 4px;
+}
+
+.ct_form ul li:last-child {
+    flex-basis: 100%;
+    text-align: center;
+    margin-top: 70px;
+}
+
+.ct_form ul li:last-child button {
+    background: #1B315D;
+    color: #ffffff;
+    border-color: #1B315D;
+}
+
+.btn_name {
+    text-align: center;
+    padding-top: 50px;
+}
+
+.wedding-rw {
+    background: url(https://yolandaholidays.com/wp-content/uploads/2025/02/closeup-shot-newlyweds-holding-hands-showing-wedding-rings-1.png) no-repeat top center;
+    background-size: cover;
+    padding-top: 100px;
+    z-index: 2;
+}
+
+.wedding-rw::after {
+    background: linear-gradient(162deg, rgba(0, 4, 5, 0) 0%, rgba(202, 240, 248, 1) 100%);
+    position: relative;
+    left: 0;
+    width: 100%;
+    top: 0;
+    height: 100%;
+    position: absolute;
+    content: '';
+}
+
+.wedding-rw .heading h2,
+.wedding-rw .heading p {
+    color: #ffffff;
+}
+
+.wedding-rw .heading p {
+    padding-bottom: 0;
+}
+
+.icon-heading {
+    height: 80px;
+    width: 80px;
+    background: #1B315D;
+    border-radius: 4px;
+}
+
+.wedding.wedding.text-center {
+    display: flex;
+}
+
+.icon-text {
+    padding-left: 20px;
+    color: #ffffff;
+}
+
+.wedding-box {
+    z-index: 2;
+}
+
+.wedding-box.position-relative {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.main-navigation {
+    padding: 10px;
+}
+
+.main-navigation .menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.main-navigation .menu li {
+    margin-right: 40px !important;
+}
+
+.main-navigation .menu li a {
+    color: #1B315D;
+    text-transform: capitalize;
+    font-size: 16px;
+    line-height: 24px;
+    transition: ease-in-out0.4s;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-widget {
+    margin-bottom: 10px;
+}
+
+.wedding-rw-sec {
+    background: url(https://yolandaholidays.com/wp-content/uploads/2025/02/closeup-shot-newlyweds-holding-hands-showing-wedding-rings-1.png) no-repeat top center;
+    position: relative;
+    background-size: cover;
+    padding: 100px 0;
+    height: 1040px;
+}
+
+.wedding-box.position-relative {
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2em;
+    margin-top: 450px;
+}
+
+.wedding.wedding.text-center {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.wedding .icon-heading {
+    height: 80px;
+    width: 80px;
+    background: #1B315D;
+    border-radius: 4px;
+}
+
+.wedding .icon-text {
+    color: #ffffff;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.wedding-rw-sec::before {
+    background-image: url('https://yolandaholidays.com/wp-content/uploads/2025/02/wedding-pattern.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    content: '';
+    background-size: contain;
+    width: 400px;
+    height: 883px;
+    z-index: -1;
+    top: -380px;
+    right: 0;
+
+}
+
+main.custom-post-template {
+    margin-top: 200px;
+    padding: 50px;
+}
+
+main.blog-container {
+    margin-top: 150px;
+    padding: 50px;
+}
+
+.blog-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Manrope', sans-serif;
+}
+
+.blog-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.blog-item {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.blog-item:hover {
+    transform: translateY(-5px);
+}
+
+.blog-item h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    line-height: 35px;
+}
+
+.blog-item h2 a {
+    text-decoration: none;
+    color: #333;
+}
+
+.blog-item h2 a:hover {
+    color: #0073e6;
+}
+
+.excerpt {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background: #0073e6;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.pagination a:hover {
+    background: #005bb5;
+}
+
+.pagination .current {
+    background: #005bb5;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.main-navigation ul.menu,
+.main-navigation ul.menu li,
+.main-navigation ul.menu li ul,
+.main-navigation ul.menu li ul li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-navigation ul.menu li {
+    position: relative;
+    /* Ensures submenu positions correctly relative to parent */
+}
+
+.main-navigation ul.menu li ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    /* Sticks submenu to bottom of parent */
+    left: 0;
+    min-width: 180px;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+
+.main-navigation ul.menu li:hover>ul {
+    display: block;
+}
+
+.main-navigation ul.menu li ul li {
+    padding: 10px;
+    white-space: nowrap;
+    /* Prevents text from wrapping awkwardly */
+}
+
+.main-navigation ul.menu li a {
+    text-decoration: none;
+}
+
+.hotel-widget-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    margin-top: 200px;
+}
+
+.hotel-widget-wrapper>div {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hotel-widget-wrapper>div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header_inner {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navigation_bar {
+    padding-top: 05px;
+}
+
+/* Custom posttype blogs archive */
+.blogs-wrapper {
+    padding: 60px 0;
+    background: #f7f8fa;
+    margin-top: 150px;
+}
+
+.blogs-title {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 50px;
+    color: #222;
+}
+
+.all-blogs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columns */
+    gap: 30px;
+    padding: 0 10px;
+    margin-top: 30px;
+}
+
+.blog-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.blog-thumbnail img {
+    width: 100%;
+    display: block;
+    height: auto;
+    object-fit: cover;
+}
+
+.blog-content {
+    padding: 20px 0px;
+}
+
+.blog-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #0073aa;
+    line-height: 32px;
+}
+
+.blog-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-title a:hover {
+    color: #005177;
+}
+
+.blog-excerpt {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.read-more {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #0073aa;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.read-more:hover {
+    background: #005177;
+}
+
+/* End Custom posttype blogs archive */
+
+/* Single blog post */
+.single-blog-wrapper {
+    padding: 60px 05px;
+    background: #f9f9f9;
+}
+
+.single-blog-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin-top: 110px;
+}
+
+/* TOC Sidebar */
+.toc-sidebar {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 100px;
+    align-self: flex-start;
+    background: transparent;
+}
+
+.toc-box {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.toc-box h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#toc-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+#toc-list li {
+    margin-bottom: 8px;
+}
+
+#toc-list a {
+    color: #0073aa;
+    font-size: 15px;
+}
+
+#toc-list a:hover {
+    color: #005177;
+}
+
+/* Blog Content Area */
+.single-blog-content {
+    flex: 1;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    max-width: 100%;
+}
+
+.single-title {
+    font-size: 34px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #222;
+}
+
+.single-meta {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+    color: #888;
+}
+
+.blog-date,
+.blog-author {
+    margin: 0 8px;
+}
+
+.single-thumbnail img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.single-content {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #444;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.hotel-widget-phuket {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+}
+
+
+
+/* === Custom 404 Page Styles === */
+.custom-404-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+    text-align: center;
+    margin-top: 130px;
+}
+
+.custom-404-content {
+    max-width: 600px;
+}
+
+.error-code {
+    font-size: 100px;
+    color: #ff4e4e;
+    margin: 0;
+    font-weight: bold;
+}
+
+.error-title {
+    font-size: 32px;
+    color: #333;
+    margin-top: 20px;
+}
+
+.error-message {
+    font-size: 18px;
+    color: #666;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.back-home-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #0073aa;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.back-home-btn:hover {
+    background-color: #005d8b;
+}

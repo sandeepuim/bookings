@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Search Results Test</title>
+    <link rel="stylesheet" href="wp-content/themes/tbo-hotels/assets/css/hotel-results.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+        
+        .test-header {
+            background: #fff;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .test-title {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <div class="container">
+            <h1 class="test-title">Hotel Search Results UI Test</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="hotel-search-results">
+            <div class="search-results-header">
+                <h2>Search Results</h2>
+                <p>Found 10 hotels</p>
+            </div>
+            
+            <div class="hotels-grid">
+                <!-- Sample Hotel Card 1 -->
+                <div class="yatra-hotel-card">
+                    <div class="hotel-image-section">
+                        <div class="hotel-placeholder-image">🏨</div>
+                    </div>
+                    
+                    <div class="hotel-details-section">
+                        <div class="hotel-header-row">
+                            <h3 class="hotel-name">Hilltone Hotel</h3>
+                            <div class="hotel-star-rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-location">
+                            <i class="location-icon">📍</i>
+                            <span>Post box No. 18 opposite bus stand, Mount Abu 307501 Rajasthan</span>
+                        </div>
+                        
+                        <div class="hotel-badges">
+                            <span class="badge eco-badge">ECO+</span>
+                            <span class="badge couple-badge">COUPLE FRIENDLY</span>
+                            <span class="badge wifi-badge">FREE WiFi</span>
+                        </div>
+                        
+                        <div class="hotel-amenities">
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Welllit path to entrance</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Wheelchair accessible pool</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Wheelchair accessible public washroom</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Elevator</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-offers">
+                            <span class="offer-text">🔓 Unlock 17% Off every night - Limited Time Offer!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-pricing-section">
+                        <div class="user-rating">
+                            <span class="rating-badge">Exceptional</span>
+                            <span class="rating-score">4.1</span>
+                            <div class="rating-reviews">2,847 reviews</div>
+                        </div>
+                        
+                        <div class="rooms-left">4 rooms left</div>
+                        
+                        <div class="pricing-info">
+                            <div class="discount-percent">17% off</div>
+                            <div class="original-price">₹2,400</div>
+                            <div class="current-price">₹ 2,000</div>
+                            <div class="price-details">+₹240 taxes & fees</div>
+                            <div class="per-night">per room per night</div>
+                        </div>
+                        
+                        <button class="choose-room-btn">Choose Room</button>
+                    </div>
+                </div>
+                
+                <!-- Sample Hotel Card 2 -->
+                <div class="yatra-hotel-card">
+                    <div class="hotel-image-section">
+                        <div class="hotel-placeholder-image">🏨</div>
+                    </div>
+                    
+                    <div class="hotel-details-section">
+                        <div class="hotel-header-row">
+                            <h3 class="hotel-name">Mountain View Resort</h3>
+                            <div class="hotel-star-rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-location">
+                            <i class="location-icon">📍</i>
+                            <span>Hill Station Road, Mount Abu 307501 Rajasthan</span>
+                        </div>
+                        
+                        <div class="hotel-badges">
+                            <span class="badge eco-badge">ECO+</span>
+                            <span class="badge wifi-badge">FREE WiFi</span>
+                        </div>
+                        
+                        <div class="hotel-amenities">
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Swimming Pool</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Restaurant</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Room Service</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-offers">
+                            <span class="offer-text">🔓 Special Weekend Discount Available!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-pricing-section">
+                        <div class="user-rating">
+                            <span class="rating-badge">Excellent</span>
+                            <span class="rating-score">4.3</span>
+                            <div class="rating-reviews">1,542 reviews</div>
+                        </div>
+                        
+                        <div class="rooms-left">7 rooms left</div>
+                        
+                        <div class="pricing-info">
+                            <div class="discount-percent">22% off</div>
+                            <div class="original-price">₹3,200</div>
+                            <div class="current-price">₹ 2,500</div>
+                            <div class="price-details">+₹300 taxes & fees</div>
+                            <div class="per-night">per room per night</div>
+                        </div>
+                        
+                        <button class="choose-room-btn">Choose Room</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

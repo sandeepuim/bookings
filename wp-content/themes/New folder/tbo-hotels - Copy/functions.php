@@ -1,0 +1,596 @@
+<?php
+/**
+ * TBO Hotels Theme functions and definitions
+ *
+ * @package TBO_Hotels
+ */
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+// Define theme constants
+define('TBO_HOTELS_VERSION', '1.0.9');
+define('TBO_HOTELS_DIR', get_template_directory());
+define('TBO_HOTELS_URI', get_template_directory_uri());
+
+// Define TBO API constants - Updated to match your exact API URLs
+define('TBO_API_BASE_URL', 'http://api.tbotechnology.in/TBOHolidays_HotelAPI');
+define('TBO_API_USERNAME', 'YOLANDATHTest');
+define('TBO_API_PASSWORD', 'Yol@40360746');
+
+/**
+ * Get TBO API authorization header
+ */
+function tbo_hotels_get_auth_header() {
+    return 'Basic ' . base64_encode(TBO_API_USERNAME . ':' . TBO_API_PASSWORD);
+}
+
+/**
+ * Make API request to TBO Hotels API
+ */
+function tbo_hotels_api_request($endpoint, $data = array(), $method = 'GET') {
+    $url = TBO_API_BASE_URL . '/' . $endpoint;
+    
+    $headers = array(
+        'Authorization' => tbo_hotels_get_auth_header(),
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json',
+    );
+    
+    $args = array(
+        'headers' => $headers,
+        'timeout' => 60,  // Increased timeout for 100 hotel search
+        'sslverify' => false,
+    );
+    
+    if ($method === 'POST') {
+        $args['method'] = 'POST';
+        $args['body'] = json_encode($data);
+        $response = wp_remote_post($url, $args);
+    } else {
+        if (!empty($data)) {
+            $url = add_query_arg($data, $url);
+        }
+        $response = wp_remote_get($url, $args);
+    }
+    //echo '<pre>';print_r($response);echo '</pre>';
+
+    if (is_wp_error($response)) {
+        error_log('TBO API Error: ' . $response->get_error_message());
+        return $response;
+    }
+
+    $response_code = wp_remote_retrieve_response_code($response);
+
+    if ($response_code !== 200) {
+        error_log('TBO API HTTP Error: ' . $response_code);
+        return new WP_Error('api_error', 'API request failed with status: ' . $response_code);
+    }
+    
+    $body = wp_remote_retrieve_body($response);
+    $data = json_decode($body, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('TBO API JSON Error: ' . json_last_error_msg());
+        return new WP_Error('json_error', 'Failed to parse API response: ' . json_last_error_msg());
+    }
+    
+    return $data;
+}
+
+/**
+ * Get Countries from TBO API
+ */
+function tbo_hotels_get_countries() {
+    $cache_key = 'tbo_hotels_countries';
+    $countries = get_transient($cache_key);
+    
+    if (false !== $countries) {
+        return $countries;
+    }
+    
+    $response = tbo_hotels_api_request('CountryList', array(), 'GET');
+    
+    if (is_wp_error($response)) {
+        return $response;
+    }
+    
+    if (isset($response['CountryList']) && is_array($response['CountryList'])) {
+        set_transient($cache_key, $response['CountryList'], 24 * HOUR_IN_SECONDS);
+        return $response['CountryList'];
+    }
+    
+    return new WP_Error('missing_countries', 'Countries not found in API response');
+}
+
+/**
+ * Get Cities from TBO API
+ */
+function tbo_hotels_get_cities($country_code) {
+    if (empty($country_code)) {
+        return new WP_Error('invalid_country', 'Country code is required');
+    }
+    
+    $cache_key = 'tbo_hotels_cities_' . $country_code;
+    $cities = get_transient($cache_key);
+    
+    if (false !== $cities) {
+        return $cities;
+    }
+    
+    $data = array('CountryCode' => $country_code);
+    $response = tbo_hotels_api_request('CityList', $data, 'POST');
+    
+    if (is_wp_error($response)) {
+        return $response;
+    }
+    
+    if (isset($response['CityList']) && is_array($response['CityList'])) {
+        set_transient($cache_key, $response['CityList'], 12 * HOUR_IN_SECONDS);
+        return $response['CityList'];
+    }
+    
+    return new WP_Error('missing_cities', 'Cities not found in API response');
+}
+
+/**
+ * Get Hotel Codes from TBO API using TBOHotelCodeList with detailed response
+ */
+function tbo_hotels_get_hotel_codes($city_code) {
+    if (empty($city_code)) {
+        return new WP_Error('invalid_city', 'City code is required');
+    }
+    
+    // Use the same detailed endpoint to get hotel codes
+    $data = array(
+        'CityCode' => $city_code,
+        'IsDetailedResponse' => 'true'
+    );
+
+    $response = tbo_hotels_api_request('TBOHotelCodeList', $data, 'POST');
+    
+    if (is_wp_error($response)) {
+        return $response;
+    }
+    if (isset($response['Hotels']) && is_array($response['Hotels'])) {
+        // Extract just the hotel codes from the detailed response
+        $hotel_codes = array();
+        foreach ($response['Hotels'] as $hotel) {
+            if (isset($hotel['HotelCode'])) {
+                $hotel_codes[] = $hotel['HotelCode'];
+            }
+        }
+        return $hotel_codes;
+    }
+    
+    return new WP_Error('missing_hotel_codes', 'Hotel codes not found in API response');
+}
+
+/**
+ * Get hotel details (names, addresses, ratings) for a specific city using TBOHotelCodeList
+ * Returns an associative array with HotelCode as key and hotel details as value
+ */
+function tbo_hotels_get_hotel_details($city_code) {
+    if (empty($city_code)) {
+        return new WP_Error('invalid_city', 'City code is required');
+    }
+    
+    // Use the TBOHotelCodeList endpoint with detailed response
+    $data = array(
+        'CityCode' => $city_code,
+        'IsDetailedResponse' => 'true'
+    );
+    
+    $response = tbo_hotels_api_request('TBOHotelCodeList', $data, 'POST');
+    
+    if (is_wp_error($response)) {
+        return $response;
+    }
+    
+    $hotel_details = array();
+    
+    if (isset($response['Hotels']) && is_array($response['Hotels'])) {
+        // Limit to 100 hotels to avoid database packet size issues
+        $hotels = array_slice($response['Hotels'], 0, 100);
+        
+        foreach ($hotels as $hotel) {
+            if (isset($hotel['HotelCode'])) {
+                $hotel_details[$hotel['HotelCode']] = array(
+                    'HotelName' => $hotel['HotelName'] ?? 'Unknown Hotel',
+                    'HotelAddress' => $hotel['Address'] ?? '',
+                    'StarRating' => tbo_hotels_parse_star_rating($hotel['HotelRating'] ?? ''),
+                    'Description' => $hotel['Description'] ?? '',
+                    'HotelFacilities' => $hotel['HotelFacilities'] ?? array(),
+                    'ImageUrls' => $hotel['ImageUrls'] ?? array(),
+                    'CountryName' => $hotel['CountryName'] ?? '',
+                    'CityName' => $hotel['CityName'] ?? '',
+                    'PhoneNumber' => $hotel['PhoneNumber'] ?? '',
+                    'Email' => $hotel['Email'] ?? '',
+                    'HotelWebsiteUrl' => $hotel['HotelWebsiteUrl'] ?? '',
+                    'Map' => $hotel['Map'] ?? ''
+                );
+            }
+        }
+    }
+    
+    return $hotel_details;
+}
+
+/**
+ * Parse TBO star rating format (e.g., "FourStar") to numeric value
+ */
+function tbo_hotels_parse_star_rating($rating_text) {
+    $rating_map = array(
+        'OneStar' => 1,
+        'TwoStar' => 2,
+        'ThreeStar' => 3,
+        'FourStar' => 4,
+        'FiveStar' => 5,
+        'Deluxe' => 4,
+        'SuperDeluxe' => 5,
+        'Budget' => 2,
+        'Standard' => 3
+    );
+    
+    return $rating_map[$rating_text] ?? 0;
+}
+
+/**
+ * Generate a descriptive hotel name based on hotel code and city
+ * This is a fallback since TBO API doesn't provide hotel names in separate endpoint
+ */
+function tbo_hotels_generate_hotel_name($hotel_code, $city_code) {
+    // Get city name for better hotel naming
+    $city_name = tbo_hotels_get_city_name($city_code);
+    
+    // Create more varied hotel names based on the hotel code
+    $hotel_number = intval(substr($hotel_code, -3)); // Last 3 digits as number
+    
+    // Different hotel name patterns based on hotel code
+    $patterns = array(
+        '{city} Palace Hotel',
+        '{city} Grand Resort', 
+        '{city} Business Hotel',
+        '{city} Luxury Suites',
+        '{city} City Hotel',
+        '{city} Royal Hotel',
+        '{city} Plaza Hotel',
+        '{city} Garden Resort',
+        '{city} Marina Hotel',
+        '{city} Executive Hotel'
+    );
+    
+    // Use hotel code to determine pattern (consistent for same hotel)
+    $pattern_index = $hotel_number % count($patterns);
+    $hotel_name = str_replace('{city}', $city_name, $patterns[$pattern_index]);
+    
+    // Add a number suffix for uniqueness
+    $suffix_number = $hotel_number % 100;
+    if ($suffix_number > 0) {
+        $hotel_name .= ' ' . $suffix_number;
+    }
+    
+    return $hotel_name;
+}
+
+/**
+ * Get city name from city code (simplified mapping for common cities)
+ */
+function tbo_hotels_get_city_name($city_code) {
+    $city_mapping = array(
+        '150184' => 'Dubai',
+        '150183' => 'Abu Dhabi', 
+        '150185' => 'Sharjah',
+        '150186' => 'Fujairah',
+        '150187' => 'Ras Al Khaimah',
+        '150188' => 'Ajman',
+        '150189' => 'Umm Al Quwain'
+    );
+    
+    return $city_mapping[$city_code] ?? 'Hotel';
+}
+
+/**
+ * Merge hotel names and details with search results
+ * @param array $searchResults - Results from Search API
+ * @param array $hotelDetails - Hotel details from HotelCodeList API
+ * @return array - Enhanced search results with hotel names and details
+ */
+function merge_hotel_names($searchResults, $hotelDetails) {
+    if (!isset($searchResults['Hotels']) || !is_array($searchResults['Hotels'])) {
+        return $searchResults;
+    }
+    
+    $enhancedHotels = array();
+    
+    foreach ($searchResults['Hotels'] as $hotel) {
+        $hotelCode = $hotel['HotelCode'] ?? '';
+        
+        // Start with the original hotel data from Search API
+        $enhancedHotel = $hotel;
+        
+        // Merge in the hotel details if available
+        if ($hotelCode && isset($hotelDetails[$hotelCode])) {
+            $details = $hotelDetails[$hotelCode];
+            
+            // Add/override with detailed information
+            $enhancedHotel['HotelName'] = $details['HotelName'];
+            $enhancedHotel['HotelAddress'] = $details['HotelAddress'];
+            $enhancedHotel['StarRating'] = $details['StarRating'];
+            $enhancedHotel['Description'] = $details['Description'];
+            $enhancedHotel['HotelFacilities'] = $details['HotelFacilities'];
+            $enhancedHotel['ImageUrls'] = $details['ImageUrls'];
+            $enhancedHotel['CountryName'] = $details['CountryName'];
+            $enhancedHotel['CityName'] = $details['CityName'];
+            $enhancedHotel['PhoneNumber'] = $details['PhoneNumber'];
+            $enhancedHotel['Email'] = $details['Email'];
+            $enhancedHotel['HotelWebsiteUrl'] = $details['HotelWebsiteUrl'];
+            $enhancedHotel['Map'] = $details['Map'];
+            
+            // Flag to indicate this hotel has enhanced data
+            $enhancedHotel['HasDetails'] = true;
+        } else {
+            // Hotel not found in details, use fallback
+            $enhancedHotel['HotelName'] = $enhancedHotel['HotelName'] ?? 'Hotel Name Not Available';
+            $enhancedHotel['HasDetails'] = false;
+        }
+        
+        $enhancedHotels[] = $enhancedHotel;
+    }
+    
+    // Update the search results with enhanced hotel data
+    $searchResults['Hotels'] = $enhancedHotels;
+    
+    return $searchResults;
+}
+
+/**
+ * Search Hotels using TBO API
+ */
+function tbo_hotels_search_hotels($params) {
+    // Validate required parameters
+    $required = array('city_code', 'check_in', 'check_out');
+    foreach ($required as $field) {
+        if (empty($params[$field])) {
+            return new WP_Error('missing_param', "Required parameter '$field' is missing");
+        }
+    }
+
+    // Step 1: Get hotel details (names, addresses, etc.) for the city
+    $hotel_details = tbo_hotels_get_hotel_details($params['city_code']);
+    if (is_wp_error($hotel_details)) {
+        return $hotel_details;
+    }
+
+    // Step 2: Get hotel codes for the search
+    $hotel_codes = tbo_hotels_get_hotel_codes($params['city_code']);
+    if (is_wp_error($hotel_codes)) {
+        return $hotel_codes;
+    }
+
+    // Limit to 100 hotel codes to match our hotel details
+    $hotel_codes = array_slice($hotel_codes, 0, 100);
+
+    // Convert to comma-separated string for the search API
+    $hotel_codes_string = implode(',', $hotel_codes);
+
+    // Step 3: Prepare search data according to TBO API structure
+    $search_data = array(
+        'CheckIn' => $params['check_in'],
+        'CheckOut' => $params['check_out'],
+        'HotelCodes' => $hotel_codes_string,
+        'GuestNationality' => 'IN',
+        'PaxRooms' => array(),
+        'ResponseTime' => 25,  // Reasonable timeout for 100 hotels
+        'IsDetailedResponse' => true  // Keep detailed response as requested
+    );
+
+    // Add room information
+    for ($i = 0; $i < intval($params['rooms']); $i++) {
+        $room = array('Adults' => intval($params['adults']));
+        if (!empty($params['children']) && intval($params['children']) > 0) {
+            $room['Children'] = intval($params['children']);
+            $room['ChildrenAges'] = array_fill(0, intval($params['children']), 5);
+        }
+        $search_data['PaxRooms'][] = $room;
+    }
+
+    // Step 4: Make API request to Search endpoint
+    $response = tbo_hotels_api_request('Search', $search_data, 'POST');
+    //echo '<pre>';print_r( $response);echo '</pre>';
+    if (is_wp_error($response)) {
+        return $response;
+    }
+
+    if (isset($response['HotelResult']) && is_array($response['HotelResult'])) {
+        // Step 5: Create initial search results
+        $search_results = array(
+            'Status' => $response['Status'],
+            'Hotels' => $response['HotelResult'],
+            'TotalHotels' => count($response['HotelResult'])
+        );
+
+        // Step 6: Merge hotel names and details with search results
+        $enhanced_results = merge_hotel_names($search_results, $hotel_details);
+
+        return $enhanced_results;
+    }
+
+    return new WP_Error('no_hotels', 'No hotels found for the given search criteria');
+}
+
+/**
+ * AJAX handler for getting countries
+ */
+function tbo_hotels_ajax_get_countries() {
+    $countries = tbo_hotels_get_countries();
+    
+    if (is_wp_error($countries)) {
+        wp_send_json_error($countries->get_error_message());
+    } else {
+        wp_send_json_success($countries);
+    }
+}
+add_action('wp_ajax_tbo_hotels_get_countries', 'tbo_hotels_ajax_get_countries');
+add_action('wp_ajax_nopriv_tbo_hotels_get_countries', 'tbo_hotels_ajax_get_countries');
+
+/**
+ * AJAX handler for getting cities
+ */
+function tbo_hotels_ajax_get_cities() {
+    if (empty($_POST['country_code'])) {
+        wp_send_json_error('Country code is required');
+    }
+    
+    $country_code = sanitize_text_field($_POST['country_code']);
+    $cities = tbo_hotels_get_cities($country_code);
+    
+    if (is_wp_error($cities)) {
+        wp_send_json_error($cities->get_error_message());
+    } else {
+        wp_send_json_success($cities);
+    }
+}
+add_action('wp_ajax_tbo_hotels_get_cities', 'tbo_hotels_ajax_get_cities');
+add_action('wp_ajax_nopriv_tbo_hotels_get_cities', 'tbo_hotels_ajax_get_cities');
+
+/**
+ * AJAX handler for searching hotels
+ */
+function tbo_hotels_ajax_search_hotels() {
+    // Verify nonce for security
+    if (!wp_verify_nonce($_POST['nonce'] ?? '', 'tbo_hotels_nonce')) {
+        wp_send_json_error('Invalid security token');
+        return;
+    }
+    
+    // Collect search parameters
+    $params = array(
+        'city_code' => sanitize_text_field($_POST['city_code'] ?? ''),
+        'check_in' => sanitize_text_field($_POST['check_in'] ?? ''),
+        'check_out' => sanitize_text_field($_POST['check_out'] ?? ''),
+        'adults' => intval($_POST['adults'] ?? 1),
+        'rooms' => intval($_POST['rooms'] ?? 1),
+        'children' => intval($_POST['children'] ?? 0),
+    );
+    
+    // Validate required parameters
+    if (empty($params['city_code']) || empty($params['check_in']) || empty($params['check_out'])) {
+        wp_send_json_error('Please fill in all required fields');
+        return;
+    }
+    
+    // Try hotel search with error handling
+    try {
+        $results = tbo_hotels_search_hotels($params);
+        
+        if (is_wp_error($results)) {
+            wp_send_json_error($results->get_error_message());
+        } else {
+            wp_send_json_success($results);
+        }
+    } catch (Exception $e) {
+        wp_send_json_error('Search error: ' . $e->getMessage());
+    }
+}
+add_action('wp_ajax_tbo_hotels_search_hotels', 'tbo_hotels_ajax_search_hotels');
+add_action('wp_ajax_nopriv_tbo_hotels_search_hotels', 'tbo_hotels_ajax_search_hotels');
+
+/**
+ * Clean up any problematic large transients
+ */
+function tbo_hotels_cleanup_transients() {
+    global $wpdb;
+    
+    // Delete any transients that might be too large
+    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_tbo_search_%' OR option_name LIKE '_transient_timeout_tbo_search_%'");
+    
+    // Clear any object cache
+    if (function_exists('wp_cache_flush')) {
+        wp_cache_flush();
+    }
+}
+
+/**
+ * Hook to clean transients when needed
+ */
+add_action('init', function() {
+    // Clean up large transients on every 100th request to prevent accumulation
+    if (rand(1, 100) === 1) {
+        tbo_hotels_cleanup_transients();
+    }
+});
+
+/**
+ * Add error logging for database issues
+ */
+function tbo_hotels_log_error($message) {
+    if (WP_DEBUG && WP_DEBUG_LOG) {
+        error_log('[TBO Hotels] ' . $message);
+    }
+}
+
+/**
+ * Theme Setup
+ */
+function tbo_hotels_setup() {
+    // Add theme support
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
+    add_theme_support('custom-logo');
+    add_theme_support('customize-selective-refresh-widgets');
+    add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
+
+    // Register navigation menus
+    register_nav_menus(array(
+        'primary' => __('Primary Menu', 'tbo-hotels'),
+        'footer' => __('Footer Menu', 'tbo-hotels'),
+    ));
+}
+add_action('after_setup_theme', 'tbo_hotels_setup');
+
+/**
+ * Enqueue scripts and styles
+ */
+function tbo_hotels_scripts() {
+    // Enqueue main stylesheet
+    wp_enqueue_style('tbo-hotels-style', get_stylesheet_uri(), array(), TBO_HOTELS_VERSION);
+    
+    // Enqueue hotel search styles
+    wp_enqueue_style('tbo-hotels-search', TBO_HOTELS_URI . '/assets/css/hotel-search.css', array(), TBO_HOTELS_VERSION);
+    
+    // Enqueue hotel results styles
+    wp_enqueue_style('tbo-hotels-results', TBO_HOTELS_URI . '/assets/css/hotel-results.css', array(), TBO_HOTELS_VERSION);
+    
+    // Enqueue jQuery
+    wp_enqueue_script('jquery');
+    
+    // Enqueue hotel search script
+    wp_enqueue_script('tbo-hotels-search', TBO_HOTELS_URI . '/assets/js/hotel-search.js', array('jquery'), TBO_HOTELS_VERSION, true);
+    
+    // Localize script with AJAX URL
+    wp_localize_script('tbo-hotels-search', 'tbo_hotels_params', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('tbo_hotels_nonce'),
+        'placeholder_image' => TBO_HOTELS_URI . '/assets/img/placeholder.jpg'
+    ));
+}
+add_action('wp_enqueue_scripts', 'tbo_hotels_scripts');
+
+/**
+ * Register widget areas
+ */
+function tbo_hotels_widgets_init() {
+    register_sidebar(array(
+        'name'          => __('Sidebar', 'tbo-hotels'),
+        'id'            => 'sidebar-1',
+        'description'   => __('Add widgets here to appear in your sidebar.', 'tbo-hotels'),
+        'before_widget' => '<section id="%1$s" class="widget %2$s">',
+        'after_widget'  => '</section>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ));
+}
+add_action('widgets_init', 'tbo_hotels_widgets_init');
+ 

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBO Hotels Form Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
+            color: #666;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .debug-panel {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>TBO Hotels Search Form Test</h1>
+    
+    <form id="hotel-search-form">
+        <div class="form-group">
+            <label for="country-select">Country</label>
+            <select id="country-select" name="country_code">
+                <option value="">Select a country</option>
+                <!-- Countries will be loaded here -->
+            </select>
+            <span class="loading" id="country-loading" style="display: none;">Loading...</span>
+            <div class="error" id="country-error"></div>
+        </div>
+        
+        <div class="form-group">
+            <label for="city-select">City</label>
+            <select id="city-select" name="city_code" disabled>
+                <option value="">Select a country first</option>
+            </select>
+            <span class="loading" id="city-loading" style="display: none;">Loading...</span>
+            <div class="error" id="city-error"></div>
+        </div>
+        
+        <button type="button" id="test-button">Test City Loading</button>
+    </form>
+    
+    <div class="debug-panel">
+        <h3>Debug Panel</h3>
+        <div id="debug-output"></div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    // Mock WordPress AJAX URL
+    var ajaxurl = '/wp-admin/admin-ajax.php';
+    
+    $(document).ready(function() {
+        var $countrySelect = $('#country-select');
+        var $citySelect = $('#city-select');
+        var $countryLoading = $('#country-loading');
+        var $cityLoading = $('#city-loading');
+        var $countryError = $('#country-error');
+        var $cityError = $('#city-error');
+        var $debugOutput = $('#debug-output');
+        
+        // Debug log function
+        function debugLog(message, data) {
+            var timestamp = new Date().toLocaleTimeString();
+            var html = '<p><strong>' + timestamp + ':</strong> ' + message + '</p>';
+            
+            if (data) {
+                html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            }
+            
+            $debugOutput.prepend(html);
+        }
+        
+        // Load countries
+        function loadCountries() {
+            $countryLoading.show();
+            $countryError.empty();
+            
+            // Simulate AJAX request to WordPress
+            $.ajax({
+                url: 'test-countries-json.php', // PHP file that outputs countries JSON
+                type: 'GET',
+                success: function(response) {
+                    debugLog('Countries loaded', response);
+                    
+                    $countrySelect.find('option:not(:first)').remove();
+                    
+                    if (response && response.length > 0) {
+                        response.forEach(function(country) {
+                            $countrySelect.append('<option value="' + country.Code + '">' + country.Name + '</option>');
+                        });
+                    } else {
+                        $countryError.text('No countries found');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    debugLog('Error loading countries', { status: status, error: error });
+                    $countryError.text('Error loading countries: ' + error);
+                },
+                complete: function() {
+                    $countryLoading.hide();
+                }
+            });
+        }
+        
+        // Load cities for a country
+        function loadCities(countryCode) {
+            $cityLoading.show();
+            $cityError.empty();
+            $citySelect.prop('disabled', true).html('<option value="">Loading cities...</option>');
+            
+            debugLog('Loading cities for country: ' + countryCode);
+            
+            // Direct API call for testing (bypassing WordPress AJAX)
+            $.ajax({
+                url: 'test-cities-json.php', // PHP file that simulates WordPress AJAX
+                type: 'POST',
+                data: {
+                    country_code: countryCode
+                },
+                success: function(response) {
+                    debugLog('City API response received', response);
+                    
+                    if (response.success && response.data) {
+                        var cities = response.data;
+                        
+                        $citySelect.find('option').remove();
+                        $citySelect.append('<option value="">Select a city</option>');
+                        
+                        cities.forEach(function(city) {
+                            if (city && city.Destination) {
+                                $citySelect.append('<option value="' + city.Destination.DestinationCode + '">' + 
+                                    city.Destination.DestinationName + '</option>');
+                            }
+                        });
+                        
+                        debugLog('City dropdown populated with ' + cities.length + ' cities');
+                    } else {
+                        debugLog('Error in city response', response);
+                        $cityError.text('Error loading cities: ' + (response.message || 'Unknown error'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    debugLog('Ajax error loading cities', { status: status, error: error });
+                    $cityError.text('Error loading cities: ' + error);
+                },
+                complete: function() {
+                    $cityLoading.hide();
+                    $citySelect.prop('disabled', false);
+                }
+            });
+        }
+        
+        // Load countries on page load
+        loadCountries();
+        
+        // When country changes, load cities
+        $countrySelect.on('change', function() {
+            var countryCode = $(this).val();
+            
+            if (countryCode) {
+                loadCities(countryCode);
+            } else {
+                $citySelect.prop('disabled', true).html('<option value="">Select a country first</option>');
+            }
+        });
+        
+        // Test button
+        $('#test-button').on('click', function() {
+            var countryCode = $countrySelect.val();
+            
+            if (countryCode) {
+                debugLog('Test button clicked. Reloading cities for: ' + countryCode);
+                loadCities(countryCode);
+            } else {
+                $countryError.text('Please select a country first');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

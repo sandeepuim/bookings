@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "eead8b39-37eb-41c2-829b-a1b2ee39bae2",
+		"name": "TBO Holidays Hotel API (Staging Flow)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30531684"
+	},
+	"item": [
+		{
+			"name": "CountryList",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Yol@40360746",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "YOLANDATHTest",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{authToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/CountryList",
+					"protocol": "http",
+					"host": [
+						"api",
+						"tbotechnology",
+						"in"
+					],
+					"path": [
+						"TBOHolidays_HotelAPI",
+						"CountryList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CityList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if(jsonData.CityList && jsonData.CityList.length > 0){",
+							"   pm.environment.set('cityCode', jsonData.CityList[0].Code);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Yol@40360746",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "YOLANDATHTest",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{authToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"CountryCode\": \"IN\"\n}"
+				},
+				"url": {
+					"raw": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/CityList",
+					"protocol": "http",
+					"host": [
+						"api",
+						"tbotechnology",
+						"in"
+					],
+					"path": [
+						"TBOHolidays_HotelAPI",
+						"CityList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HotelCodeList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if(jsonData.HotelCodes && jsonData.HotelCodes.length > 0){",
+							"   var selected = jsonData.HotelCodes.slice(0,2).join(',');",
+							"   pm.environment.set('hotelCodes', selected);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Yol@40360746",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "YOLANDATHTest",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{authToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"CityCode\": \"418069\"\n}"
+				},
+				"url": {
+					"raw": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/HotelCodeList",
+					"protocol": "http",
+					"host": [
+						"api",
+						"tbotechnology",
+						"in"
+					],
+					"path": [
+						"TBOHolidays_HotelAPI",
+						"HotelCodeList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Yol@40360746",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "YOLANDATHTest",
+							"type": "string"
+						},
+						{
+							"key": "showPassword",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic {{authToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"CheckIn\": \"2025-09-27\",\n  \"CheckOut\": \"2025-09-29\",\n  \"HotelCodes\": \"1000000,1000001,1000002,10000031000094,1000096\",\n  \"GuestNationality\": \"IN\",\n  \"PaxRooms\": [\n    { \"Adults\": 1 }\n  ],\n  \"ResponseTime\": 20,\n  \"IsDetailedResponse\": true\n}"
+				},
+				"url": {
+					"raw": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search",
+					"protocol": "http",
+					"host": [
+						"api",
+						"tbotechnology",
+						"in"
+					],
+					"path": [
+						"TBOHolidays_HotelAPI",
+						"Search"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": "YOUR_BASE64_AUTH_TOKEN"
+		}
+	]
+}

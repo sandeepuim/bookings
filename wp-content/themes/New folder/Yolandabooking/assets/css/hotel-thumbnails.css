@@ -1,0 +1,113 @@
+/* Hotel thumbnail styles */
+.hotel-code {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+.hotel-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+}
+
+.hotel-image:hover .hotel-thumbnail {
+    transform: scale(1.05);
+}
+
+/* Hotel Gallery */
+.hotel-gallery {
+    margin-bottom: 2rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.hotel-gallery h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.hotel-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-gap: 15px;
+    margin-bottom: 1rem;
+}
+
+.thumbnail-item {
+    position: relative;
+    transition: transform 0.2s;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: 150px;
+}
+
+.thumbnail-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.thumbnail-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.thumbnail-image {
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.thumbnail-caption {
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+    line-height: 1.3;
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Responsive styles for the thumbnail gallery */
+@media (max-width: 768px) {
+    .hotel-thumbnails {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    
+    .thumbnail-image {
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hotel-thumbnails {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .thumbnail-image {
+        height: 90px;
+    }
+    
+    .thumbnail-caption {
+        font-size: 0.75rem;
+        padding: 0.3rem;
+    }
+}

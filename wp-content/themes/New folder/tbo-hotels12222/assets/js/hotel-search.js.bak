@@ -1,0 +1,758 @@
+/**
+ * TBO Hotels Search JavaScript
+ * Handles the hotel search form functionality and AJAX requests
+ */
+
+// Use IIFE to prevent $ conflicts
+(function($, window, document) {
+    // Ensure $ works in this scope
+    'use strict';
+    
+    // Error handling utility
+    var errorHandler = {
+        logError: function(message, error) {
+            console.error('[TBO Hotels]', message, error);
+        },
+        showUserError: function(message) {
+            // Check if the notification element exists, create if not
+            var $notification = $('#tbo-notification');
+            if (!$notification.length) {
+                $('body').append('<div id="tbo-notification" class="tbo-notification"></div>');
+                $notification = $('#tbo-notification');
+            }
+            
+            // Add error message
+            $notification.html('<div class="tbo-error-message"><i class="fa fa-exclamation-circle"></i> ' + message + '</div>')
+                .addClass('show');
+                
+            // Hide after 5 seconds
+            setTimeout(function() {
+                $notification.removeClass('show');
+            }, 5000);
+        },
+        handleAjaxError: function(xhr, status, error, userMessage) {
+            var defaultMessage = 'An error occurred while processing your request. Please try again.';
+            var displayMessage = userMessage || defaultMessage;
+            
+            this.logError('AJAX Error: ' + status, {
+                error: error, 
+                status: status,
+                response: xhr.responseText
+            });
+            
+            this.showUserError(displayMessage);
+        }
+    };
+    
+    // Run once the document is ready
+    $(document).ready(function() {
+        var searchState = {
+            countries: [],
+            cities: [],
+            searchResults: []
+        };
+    
+    // Cache DOM elements
+    var $form = $('#hotel-search-form');
+    var $countrySelect = $('#country_code');
+    var $citySelect = $('#city_code');
+    var $resultsContainer = $('#search-results');
+    var $searchButton = $('.search-button-inline');
+    
+    // Initialize single-row form functionality
+    initializeSingleRowForm();
+    
+    // Load countries on page load
+    loadCountries();
+    
+    // Set default to India
+    setTimeout(function() {
+        $countrySelect.val('IN').trigger('change');
+    }, 1000);
+    
+    // Country change handler
+    $countrySelect.on('change', function() {
+        var countryCode = $(this).val();
+        
+        if (countryCode) {
+            loadCities(countryCode);
+        } else {
+            $citySelect.prop('disabled', true).html('<option value="">Select Country First</option>');
+        }
+    });
+    
+    // Form submission handler
+    $form.on('submit', function(e) {
+        e.preventDefault();
+        performHotelSearch();
+    });
+    
+    /**
+     * Load countries from API
+     */
+    function loadCountries() {
+        showLoading($countrySelect, 'Loading countries...');
+        
+        $.ajax({
+            url: tbo_hotels_params.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'tbo_hotels_get_countries',
+                nonce: tbo_hotels_params.nonce
+            },
+            success: function(response) {
+                console.log('Countries API response:', response);
+                
+                if (response.success && response.data) {
+                    searchState.countries = response.data;
+                    populateCountrySelect(response.data);
+                } else {
+                    var errorMessage = response.data || 'Unable to load countries. Please try again.';
+                    showError($countrySelect, errorMessage);
+                    errorHandler.logError('Countries API returned error:', response);
+                }
+            },
+            error: function(xhr, status, error) {
+                showError($countrySelect, 'Error loading countries. Please check your connection.');
+                errorHandler.handleAjaxError(xhr, status, error, 'Unable to load countries. Please try again later.');
+            },
+            complete: function() {
+                hideLoading($countrySelect);
+            }
+        });
+    }
+    
+    /**
+     * Load cities for selected country
+     */
+    function loadCities(countryCode) {
+        showLoading($citySelect, 'Loading cities...');
+        $citySelect.prop('disabled', true);
+        
+        $.ajax({
+            url: tbo_hotels_params.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'tbo_hotels_get_cities',
+                country_code: countryCode,
+                nonce: tbo_hotels_params.nonce
+            },
+            success: function(response) {
+                console.log('Cities API response:', response);
+                
+                if (response.success && response.data) {
+                    searchState.cities = response.data;
+                    populateCitySelect(response.data);
+                } else {
+                    var errorMessage = response.data || 'Unable to load cities. Please try again.';
+                    showError($citySelect, errorMessage);
+                    errorHandler.logError('Cities API returned error:', response);
+                }
+            },
+            error: function(xhr, status, error) {
+                showError($citySelect, 'Error loading cities. Please check your connection.');
+                errorHandler.handleAjaxError(xhr, status, error, 'Unable to load cities. Please try again later.');
+            },
+            complete: function() {
+                hideLoading($citySelect);
+                $citySelect.prop('disabled', false);
+            }
+        });
+    }
+    
+    /**
+     * Perform hotel search - REDIRECT VERSION
+     */
+    function performHotelSearch() {
+        var formData = {
+            country_code: $('#country_code').val(),
+            city_code: $('#city_code').val(),
+            check_in: $('#check_in').val(),
+            check_out: $('#check_out').val(),
+            rooms: $('#rooms').val() || 1,
+            adults: $('#adults').val() || 2,
+            children: $('#children').val() || 0
+        };
+        
+        // Enhanced validation
+        var errors = [];
+        
+        if (!formData.country_code) {
+            errors.push('Please select a country.');
+            showError($countrySelect, 'Country is required');
+        }
+        
+        if (!formData.city_code) {
+            errors.push('Please select a city.');
+            showError($citySelect, 'City is required');
+        }
+        
+        if (!formData.check_in) {
+            errors.push('Please select a check-in date.');
+            showError($('#check_in'), 'Check-in date is required');
+        }
+        
+        if (!formData.check_out) {
+            errors.push('Please select a check-out date.');
+            showError($('#check_out'), 'Check-out date is required');
+        }
+        
+        // Check if check-out is after check-in
+        if (formData.check_in && formData.check_out) {
+            var checkIn = new Date(formData.check_in);
+            var checkOut = new Date(formData.check_out);
+            
+            if (checkOut <= checkIn) {
+                errors.push('Check-out date must be after check-in date.');
+                showError($('#check_out'), 'Must be after check-in');
+            }
+        }
+        
+        // Show errors if any
+        if (errors.length > 0) {
+            errorHandler.showUserError(errors.join('<br>'));
+            return;
+        }
+        
+        // Show loading state
+        showSearchButtonLoading();
+        
+        try {
+            console.log('Hotel search redirect with parameters:', formData);
+            
+            // Create search parameters for URL
+            var searchParams = new URLSearchParams(formData);
+            
+            // REDIRECT TO RESULTS PAGE - Using site_url from WordPress
+            var redirectUrl = '/bookings/hotel-results/?' + searchParams.toString();
+            console.log('🚀 REDIRECTING TO:', redirectUrl);
+            
+            // Redirect to the dedicated search results page
+            window.location.href = redirectUrl;
+        } catch (error) {
+            errorHandler.logError('Error during search redirect:', error);
+            errorHandler.showUserError('An error occurred while processing your search. Please try again.');
+            hideSearchButtonLoading();
+        }
+    }
+    
+    /**
+     * Populate country select options
+     */
+    function populateCountrySelect(countries) {
+        var options = '<option value="">Select Country</option>';
+        
+        countries.forEach(function(country) {
+            options += '<option value="' + country.Code + '">' + country.Name + '</option>';
+        });
+        
+        $countrySelect.html(options);
+    }
+    
+    /**
+     * Populate city select options
+     */
+    function populateCitySelect(cities) {
+        var options = '<option value="">Select City</option>';
+        
+        cities.forEach(function(city) {
+            options += '<option value="' + city.Code + '">' + city.Name + '</option>';
+        });
+        
+        $citySelect.html(options);
+    }
+    
+    /**
+     * Display search results
+     */
+    function displaySearchResults(data) {
+        console.log('Displaying search results:', data);
+        console.log('Hotels array:', data.Hotels);
+        
+        if (!data.Hotels || data.Hotels.length === 0) {
+            $resultsContainer.html('<div class="no-results">No hotels found for your search criteria.</div>');
+            return;
+        }
+        
+        console.log('First hotel structure:', data.Hotels[0]);
+        
+        var html = '<div class="search-results-header">';
+        html += '<h2>Search Results</h2>';
+        html += '<p>Found ' + data.TotalHotels + ' hotels</p>';
+        html += '</div>';
+        
+        html += '<div class="hotels-grid">';
+        
+        data.Hotels.forEach(function(hotel) {
+            html += buildHotelCard(hotel);
+        });
+        
+        html += '</div>';
+        
+        $resultsContainer.html(html);
+        
+        // Force horizontal layout immediately after rendering
+        console.log('🔧 Calling forceHorizontalLayout after rendering hotel cards...');
+        
+        // Apply multiple layout fixes with increasing delays
+        setTimeout(function() {
+            console.log('🎯 First layout fix attempt...');
+            if (typeof forceHorizontalLayout === 'function') {
+                forceHorizontalLayout();
+            }
+            
+            // Apply additional CSS directly to ensure horizontal layout
+            $('.yatra-hotel-card').each(function() {
+                $(this).css({
+                    'display': 'flex',
+                    'flex-direction': 'row',
+                    'align-items': 'stretch',
+                    'width': '100%',
+                    'margin-bottom': '20px'
+                });
+            });
+        }, 100);
+        
+        // Second attempt with more delay
+        setTimeout(function() {
+            console.log('🎯 Second layout fix attempt...');
+            if (typeof forceHorizontalLayout === 'function') {
+                forceHorizontalLayout();
+            }
+        }, 300);
+        
+        // Third attempt for stubborn cases
+        setTimeout(function() {
+            console.log('🎯 Final layout fix attempt...');
+            if (typeof forceHorizontalLayout === 'function') {
+                forceHorizontalLayout();
+            }
+        }, 1000);
+        
+        // Scroll to results
+        $('html, body').animate({
+            scrollTop: $resultsContainer.offset().top - 100
+        }, 500);
+    }
+    
+    /**
+     * Build individual hotel card HTML in Yatra.com style
+     */
+    function buildHotelCard(hotel) {
+        console.log('Building hotel card for hotel:', hotel);
+        
+        var hotelName = hotel.HotelName || 'Hotel Name Not Available';
+        var hotelCode = hotel.HotelCode || '';
+        var hotelAddress = hotel.HotelAddress || '';
+        var starRating = hotel.StarRating || 0;
+        var hasDetails = hotel.HasDetails || false;
+        var currency = hotel.Currency || 'USD';
+        var rooms = hotel.Rooms || [];
+        var imageUrls = hotel.ImageUrls || [];
+        var facilities = hotel.HotelFacilities || [];
+        var cityName = hotel.CityName || '';
+        
+        console.log('Hotel name extracted:', hotelName);
+        console.log('Has enhanced details:', hasDetails);
+        
+        // Calculate pricing
+        var minPrice = null;
+        var originalPrice = null;
+        var roomsLeft = rooms.length;
+        var featuredRoom = null;
+        
+        if (rooms.length > 0) {
+            var prices = [];
+            rooms.forEach(function(room) {
+                if (room.DayRates && room.DayRates[0] && room.DayRates[0][0] && room.DayRates[0][0].BasePrice) {
+                    prices.push(room.DayRates[0][0].BasePrice);
+                }
+            });
+            
+            if (prices.length > 0) {
+                minPrice = Math.min.apply(Math, prices);
+                originalPrice = minPrice * 1.2; // Mock original price (20% higher)
+                featuredRoom = rooms[0];
+            }
+        }
+        
+        var html = '<div class="yatra-hotel-card" data-hotel-code="' + hotelCode + '">';
+        
+        // Left side - Hotel image
+        html += '<div class="hotel-image-section">';
+        if (hasDetails && imageUrls.length > 0) {
+            // Handle TBO ImageUrls structure - can be array of objects or strings
+            var imageUrl = '';
+            if (typeof imageUrls[0] === 'object' && imageUrls[0].ImageUrl) {
+                imageUrl = imageUrls[0].ImageUrl;
+            } else if (typeof imageUrls[0] === 'string') {
+                imageUrl = imageUrls[0];
+            }
+            
+            if (imageUrl) {
+                console.log('Using hotel image:', imageUrl);
+                html += '<div class="image-loading-wrapper">';
+                html += '<div class="image-loader">Loading...</div>';
+                html += '<img src="' + imageUrl + '" alt="' + hotelName + '" class="hotel-main-image" ';
+                html += 'onload="this.parentElement.classList.add(\'loaded\'); this.parentElement.querySelector(\'.image-loader\').style.display=\'none\';" ';
+                html += 'onerror="this.onerror=null; this.style.display=\'none\'; this.parentElement.innerHTML=\'<div class=\\\"hotel-placeholder-image\\\">🏨</div>\';">';
+                
+                // Add image count badge if multiple images
+                if (imageUrls.length > 1) {
+                    html += '<div class="image-count-badge">+' + (imageUrls.length - 1) + ' more</div>';
+                }
+                
+                html += '</div>';
+            } else {
+                html += '<div class="hotel-placeholder-image">🏨</div>';
+            }
+        } else {
+            html += '<div class="hotel-placeholder-image">🏨</div>';
+        }
+        html += '</div>';
+        
+        // Middle section - Hotel details
+        html += '<div class="hotel-details-section">';
+        
+        // Hotel name and rating
+        html += '<div class="hotel-header-row">';
+        html += '<h3 class="hotel-name">' + hotelName + '</h3>';
+        if (starRating > 0) {
+            html += '<div class="hotel-star-rating">';
+            for (var i = 0; i < starRating; i++) {
+                html += '<span class="star">★</span>';
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        
+        // Location
+        if (hotelAddress || cityName) {
+            html += '<div class="hotel-location">';
+            html += '<i class="location-icon">📍</i>';
+            html += '<span>' + (hotelAddress || cityName) + '</span>';
+            html += '</div>';
+        }
+        
+        // Hotel badges and features
+        html += '<div class="hotel-badges">';
+        if (hasDetails) {
+            html += '<span class="badge eco-badge">ECO+</span>';
+            html += '<span class="badge couple-badge">COUPLE FRIENDLY</span>';
+            if (facilities.indexOf('Free WiFi') !== -1 || facilities.indexOf('Wifi') !== -1) {
+                html += '<span class="badge wifi-badge">FREE WiFi</span>';
+            }
+        }
+        html += '</div>';
+        
+        // Amenities (key features)
+        if (facilities.length > 0) {
+            html += '<div class="hotel-amenities">';
+            var keyAmenities = facilities.slice(0, 4);
+            keyAmenities.forEach(function(amenity, index) {
+                var cleanAmenity = amenity.replace(/[^a-zA-Z\s]/g, '').trim();
+                if (cleanAmenity) {
+                    html += '<div class="amenity-item">';
+                    html += '<span class="amenity-check">✓</span>';
+                    html += '<span>' + cleanAmenity + '</span>';
+                    html += '</div>';
+                }
+            });
+            html += '</div>';
+        }
+        
+        // Special offers
+        if (minPrice) {
+            html += '<div class="hotel-offers">';
+            html += '<span class="offer-text">🔓 Unlock 17% Off every night - Limited Time Offer!</span>';
+            html += '</div>';
+        }
+        
+        html += '</div>';
+        
+        // Right side - Pricing and booking
+        html += '<div class="hotel-pricing-section">';
+        
+        // User rating (mock for now)
+        html += '<div class="user-rating">';
+        html += '<span class="rating-badge">Exceptional</span>';
+        html += '<span class="rating-score">4.' + Math.floor(Math.random() * 5) + '</span>';
+        html += '<div class="rating-reviews">' + (Math.floor(Math.random() * 5000) + 1000) + ' reviews</div>';
+        html += '</div>';
+        
+        // Rooms left
+        if (roomsLeft > 0) {
+            html += '<div class="rooms-left">' + Math.min(roomsLeft, 10) + ' rooms left</div>';
+        }
+        
+        // Pricing
+        if (minPrice) {
+            var discountPercent = Math.floor(((originalPrice - minPrice) / originalPrice) * 100);
+            
+            html += '<div class="pricing-info">';
+            html += '<div class="discount-percent">' + discountPercent + '% off</div>';
+            html += '<div class="original-price">₹' + Math.floor(originalPrice).toLocaleString() + '</div>';
+            html += '<div class="current-price">₹ ' + Math.floor(minPrice).toLocaleString() + '</div>';
+            html += '<div class="price-details">+₹' + Math.floor(minPrice * 0.12) + ' taxes & fees</div>';
+            html += '<div class="per-night">per room per night</div>';
+            html += '</div>';
+        } else {
+            html += '<div class="pricing-info">';
+            html += '<div class="current-price">Price on request</div>';
+            html += '<div class="per-night">Contact for rates</div>';
+            html += '</div>';
+        }
+        
+        // Choose room button
+        html += '<button class="choose-room-btn" data-hotel-code="' + hotelCode + '">Choose Room</button>';
+        
+        html += '</div>';
+        
+        html += '</div>';
+        
+        return html;
+    }
+    
+    /**
+     * Show search button loading state
+     */
+    function showSearchButtonLoading() {
+        $searchButton.prop('disabled', true)
+                    .addClass('loading')
+                    .html('<span class="button-spinner"></span> Searching...');
+    }
+    
+    /**
+     * Hide search button loading state
+     */
+    function hideSearchButtonLoading() {
+        $searchButton.prop('disabled', false)
+                    .removeClass('loading')
+                    .text('Search Hotels');
+    }
+
+    /**
+     * Show search loading state with professional spinner
+     */
+    function showSearchLoading() {
+        var loadingHtml = `
+            <div class="search-loading-container">
+                <div class="loading-spinner-wrapper">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">
+                        <h3>Searching for Hotels...</h3>
+                        <p>Please wait while we find the best hotels for you</p>
+                        <div class="loading-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-info">
+                    <div class="loading-step active">
+                        <div class="step-icon">🔍</div>
+                        <span>Searching hotels...</span>
+                    </div>
+                    <div class="loading-step" id="step-fetching">
+                        <div class="step-icon">📋</div>
+                        <span>Fetching details...</span>
+                    </div>
+                    <div class="loading-step" id="step-pricing">
+                        <div class="step-icon">💰</div>
+                        <span>Getting best prices...</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $resultsContainer.html(loadingHtml);
+        
+        // Animate loading steps
+        setTimeout(function() {
+            $('#step-fetching').addClass('active');
+        }, 1000);
+        
+        setTimeout(function() {
+            $('#step-pricing').addClass('active');
+        }, 2000);
+    }
+
+    /**
+     * Show loading state for select element
+     */
+    function showLoading($element, message) {
+        $element.html('<option value="">' + message + '</option>');
+    }
+    
+    /**
+     * Hide loading state
+     */
+    function hideLoading($element) {
+        // Loading will be replaced by actual options
+    }
+    
+    /**
+     * Show error message
+     */
+    function showError($element, message) {
+        $element.html('<option value="">Error loading data</option>');
+        console.error(message);
+    }
+    
+    // Choose room button handler (delegate event)
+    // $(document).on('click', '.choose-room-btn', function() {
+    //     var hotelCode = $(this).closest('.yatra-hotel-card').data('hotel-code');
+    //     alert('Room selection for hotel ' + hotelCode + ' would be implemented here.');
+    //     // Here you would implement the room selection flow
+    // });
+    
+    // Set default dates (today + 1 day for check-in, today + 2 days for check-out)
+    function setDefaultDates() {
+        var today = new Date();
+        var checkIn = new Date(today);
+        checkIn.setDate(today.getDate() + 1);
+        var checkOut = new Date(today);
+        checkOut.setDate(today.getDate() + 2);
+        
+        $('#check_in').val(checkIn.toISOString().split('T')[0]);
+        $('#check_out').val(checkOut.toISOString().split('T')[0]);
+        
+        // Update display
+        updateDateDisplay();
+    }
+    
+    /**
+     * Initialize single-row form functionality
+     */
+    function initializeSingleRowForm() {
+        // Date picker handlers - make date fields clickable
+        $('.date-display').on('click', function() {
+            var dateInput = $(this).siblings('input[type="date"]');
+            if (dateInput.length) {
+                dateInput[0].showPicker();
+            }
+        });
+        
+        // Date change handlers
+        $('#check_in, #check_out').on('change', function() {
+            updateDateDisplay();
+        });
+        
+        // City selector change
+        $('#city_code').on('change', function() {
+            var selectedCity = $(this).find('option:selected').text();
+            console.log('City selected:', selectedCity);
+        });
+        
+        // Initialize displays
+        updateDateDisplay();
+        updateGuestsDisplay();
+    }
+    
+    /**
+     * Update date display based on selected dates
+     */
+    function updateDateDisplay() {
+        var checkInDate = new Date($('#check_in').val());
+        var checkOutDate = new Date($('#check_out').val());
+        
+        if (!isNaN(checkInDate.getTime())) {
+            var checkInDisplay = $('.date-group').first().find('.date-display');
+            checkInDisplay.find('.date-num').text(checkInDate.getDate());
+            checkInDisplay.find('.date-text').html(
+                getMonthShort(checkInDate) + "' " + checkInDate.getFullYear().toString().substr(-2) + 
+                "<br>" + getDayName(checkInDate)
+            );
+        }
+        
+        if (!isNaN(checkOutDate.getTime())) {
+            var checkOutDisplay = $('.date-group').last().find('.date-display');
+            checkOutDisplay.find('.date-num').text(checkOutDate.getDate());
+            checkOutDisplay.find('.date-text').html(
+                getMonthShort(checkOutDate) + "' " + checkOutDate.getFullYear().toString().substr(-2) + 
+                "<br>" + getDayName(checkOutDate)
+            );
+        }
+    }
+    
+    /**
+     * Update guests display based on selected values
+     */
+    function updateGuestsDisplay() {
+        var rooms = $('#rooms').val() || 1;
+        var adults = $('#adults').val() || 2;
+        var children = $('#children').val() || 0;
+        
+        var roomText = rooms + ' Room' + (rooms > 1 ? 's' : '');
+        var guestTotal = parseInt(adults) + parseInt(children);
+        var guestText = guestTotal + ' Guest' + (guestTotal > 1 ? 's' : '');
+        
+        $('.room-count').text(rooms);
+        $('.guest-count').text(guestTotal);
+        
+        var detailText = adults + ' Adult' + (adults > 1 ? 's' : '');
+        if (children > 0) {
+            detailText += ', ' + children + ' Child' + (children > 1 ? 'ren' : '');
+        }
+        $('.guest-details').text(detailText);
+    }
+    
+    /**
+     * Get short month name
+     */
+    function getMonthShort(date) {
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return months[date.getMonth()];
+    }
+    
+    /**
+     * Get day name
+     */
+    function getDayName(date) {
+        var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        return days[date.getDay()];
+    }
+
+    // Initialize default dates
+    setDefaultDates();
+    
+    // Choose room button handler (delegate event)
+    $(document).on('click', '.choose-room-btn', function() {
+        var hotelCode = $(this).closest('.yatra-hotel-card').data('hotel-code');
+      //  var hotelCode = $(this).data('hotel-code');
+        console.log('Choose room clicked for hotel code:', hotelCode);
+        
+        // Get current search parameters
+        var searchParams = new URLSearchParams(window.location.search);
+
+// Ensure jQuery is available
+jQuery(document).ready(function($) {
+        
+        // Make sure we have all the required parameters
+        if (!searchParams.has('city_code')) {
+            console.error('Missing city_code parameter');
+            alert('Unable to proceed: Missing required parameters');
+            return;
+        }
+        
+        // Create a URL to the room-type page (with fixed slug)
+        var roomsUrl = '/bookings/room-type/?hotel_code=' + hotelCode;
+        
+        // Add all other search parameters
+        searchParams.forEach(function(value, key) {
+            if (key !== 'hotel_code') { // Don't duplicate hotel_code
+                roomsUrl += '&' + key + '=' + value;
+            }
+        });
+        
+        console.log('Redirecting to room selection URL:', roomsUrl);
+        
+        // Redirect to the room selection page
+        window.location.href = roomsUrl;
+    });
+    
+    }); // End of document ready
+
+})(jQuery, window, document);

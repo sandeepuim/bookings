@@ -1,0 +1,1575 @@
+/**
+ * Hotel Results Styles
+ * Last Updated: 2025-09-14 - Force Horizontal Layout Fix v3
+ * CRITICAL: This CSS forces horizontal hotel card layout
+ */
+
+/* NUCLEAR OPTION - FORCE HORIZONTAL LAYOUT WITH HIGHEST SPECIFICITY */
+body div.container div.hotel-search-container div#search-results.hotel-search-results div.hotels-grid div.yatra-hotel-card,
+div.hotel-search-results div.hotels-grid div.yatra-hotel-card,
+.hotels-grid .yatra-hotel-card,
+.yatra-hotel-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background-color: #fff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    margin-bottom: 16px !important;
+    min-height: 200px !important;
+    box-sizing: border-box !important;
+}
+
+/* FORCE ALL SECTIONS TO DISPLAY WITH EXACT SPECIFICITY */
+body div.container div.hotel-search-container div#search-results.hotel-search-results div.hotels-grid div.yatra-hotel-card div.hotel-image-section,
+div.hotel-search-results div.hotels-grid div.yatra-hotel-card div.hotel-image-section,
+.hotels-grid .yatra-hotel-card .hotel-image-section,
+.yatra-hotel-card .hotel-image-section {
+    display: block !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    height: 200px !important;
+    flex-shrink: 0 !important;
+    background-color: #f5f5f5 !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body div.container div.hotel-search-container div#search-results.hotel-search-results div.hotels-grid div.yatra-hotel-card div.hotel-details-section,
+div.hotel-search-results div.hotels-grid div.yatra-hotel-card div.hotel-details-section,
+.hotels-grid .yatra-hotel-card .hotel-details-section,
+.yatra-hotel-card .hotel-details-section {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    padding: 20px !important;
+    justify-content: space-between !important;
+    min-width: 0 !important;
+}
+
+body div.container div.hotel-search-container div#search-results.hotel-search-results div.hotels-grid div.yatra-hotel-card div.hotel-pricing-section,
+div.hotel-search-results div.hotels-grid div.yatra-hotel-card div.hotel-pricing-section,
+.hotels-grid .yatra-hotel-card .hotel-pricing-section,
+.yatra-hotel-card .hotel-pricing-section {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    padding: 20px !important;
+    border-left: 1px solid #e0e0e0 !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+    background-color: #fff !important;
+}
+
+.hotel-search-results {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* CRITICAL: Target the search results page specifically */
+#search-results.hotel-search-results,
+#search-results.hotel-search-results .hotels-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    width: 100% !important;
+}
+
+.search-summary {
+    background-color: #f7f7f7;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-summary h2 {
+    font-size: 20px;
+    margin: 0 0 5px 0;
+}
+
+.search-summary .search-details {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.search-summary .search-count {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.search-filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-filter label {
+    margin-right: 10px;
+}
+
+.search-filter select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Search Results Container */
+.search-results-header {
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #eee;
+}
+
+.search-results-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    color: #333;
+}
+
+.search-results-header p {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+}
+
+/* Search Results Header */
+.search-results-header {
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.search-results-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+}
+
+.search-results-header p {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px;
+}
+
+.no-results h3 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.no-results p {
+    color: #999;
+}
+
+/* Hotels Grid Container */
+.hotels-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 100%;
+    margin: 20px 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Yatra.com Style Hotel Card - FORCE HORIZONTAL LAYOUT */
+.yatra-hotel-card {
+    display: flex !important;
+    flex-direction: row !important;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 16px;
+    min-height: 200px;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* CRITICAL: Force all three main sections to be visible and properly sized */
+.yatra-hotel-card .hotel-image-section {
+    display: block !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    height: 200px !important;
+    flex-shrink: 0 !important;
+    background-color: #f5f5f5 !important;
+}
+
+.yatra-hotel-card .hotel-details-section {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    padding: 20px !important;
+    justify-content: space-between !important;
+}
+
+.yatra-hotel-card .hotel-pricing-section {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    padding: 20px !important;
+    border-left: 1px solid #e0e0e0 !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+}
+
+/* PRICING SECTION ELEMENTS */
+.yatra-hotel-card .user-rating {
+    margin-bottom: 15px;
+}
+
+.yatra-hotel-card .rating-badge {
+    background-color: #4caf50;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.yatra-hotel-card .rating-score {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4caf50;
+    line-height: 1;
+}
+
+.yatra-hotel-card .rating-reviews {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.yatra-hotel-card .rooms-left {
+    color: #ff6b35;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.yatra-hotel-card .pricing-info {
+    margin-bottom: 15px;
+}
+
+.yatra-hotel-card .discount-percent {
+    background-color: #ff6b35;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.yatra-hotel-card .original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.yatra-hotel-card .current-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.yatra-hotel-card .price-details {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.yatra-hotel-card .per-night {
+    font-size: 11px;
+    color: #666;
+}
+
+.yatra-hotel-card .choose-room-btn {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.yatra-hotel-card .choose-room-btn:hover {
+    background-color: #e55a2e;
+}
+
+/* Override any other styles that might interfere */
+.yatra-hotel-card,
+.hotel-search-results .yatra-hotel-card,
+.hotels-grid .yatra-hotel-card {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+/* Force horizontal layout for desktop and tablet */
+ 
+
+.yatra-hotel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* Hotel Image Section - FORCE FIXED WIDTH */
+.hotel-image-section,
+.yatra-hotel-card .hotel-image-section,
+.hotels-grid .yatra-hotel-card .hotel-image-section {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    flex-shrink: 0 !important;
+}
+
+.image-loading-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 14px;
+    z-index: 2;
+}
+
+.image-loading-wrapper.loaded .image-loader {
+    display: none;
+}
+
+.hotel-main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    background-color: #f5f5f5;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.image-loading-wrapper.loaded .hotel-main-image {
+    opacity: 1;
+}
+
+.image-count-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    z-index: 3;
+}
+
+.hotel-main-image:hover {
+    transform: scale(1.05);
+}
+
+.hotel-main-image.image-error {
+    opacity: 0.7;
+    transform: none;
+}
+
+.hotel-main-image.image-error:hover {
+    transform: none;
+}
+
+.hotel-placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    font-size: 48px;
+    color: #ccc;
+    position: relative;
+}
+
+.hotel-placeholder-image::after {
+    content: "Hotel Image";
+    position: absolute;
+    bottom: 20px;
+    font-size: 12px;
+    color: #999;
+    font-family: Arial, sans-serif;
+}
+
+/* Hotel Details Section */
+.hotel-details-section {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hotel-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.hotel-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    flex: 1;
+    line-height: 1.3;
+}
+
+.hotel-star-rating {
+    display: flex;
+    margin-left: 16px;
+}
+
+.hotel-star-rating .star {
+    color: #ffa726;
+    font-size: 16px;
+    margin-right: 2px;
+}
+
+.hotel-location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #666;
+    font-size: 14px;
+}
+
+.location-icon {
+    margin-right: 6px;
+    font-size: 12px;
+}
+
+/* Hotel Badges */
+.hotel-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.eco-badge {
+    background-color: #4caf50;
+    color: white;
+}
+
+.couple-badge {
+    background-color: #e91e63;
+    color: white;
+}
+
+.wifi-badge {
+    background-color: #2196f3;
+    color: white;
+}
+
+/* Hotel Amenities */
+.hotel-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #666;
+}
+
+.amenity-check {
+    color: #4caf50;
+    margin-right: 6px;
+    font-weight: bold;
+}
+
+/* Hotel Offers */
+.hotel-offers {
+    margin-top: auto;
+}
+
+/* Hotel Pricing Section - FORCE FIXED WIDTH */
+.hotel-pricing-section,
+.yatra-hotel-card .hotel-pricing-section,
+.hotels-grid .yatra-hotel-card .hotel-pricing-section {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    padding: 20px;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    text-align: right;
+    flex-shrink: 0 !important;
+}
+
+.user-rating-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rating-score {
+    background-color: #4caf50;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.rating-text {
+    font-size: 13px;
+    color: #666;
+}
+
+.review-count {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+}
+
+/* Pricing Display */
+.pricing-display {
+    margin: 12px 0;
+}
+
+.discount-percentage {
+    background-color: #ff4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: inline-block;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.current-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.price-currency {
+    font-size: 16px;
+    color: #666;
+}
+
+.price-per-night {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.rooms-left {
+    color: #ff6b35;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+/* Action Buttons */
+.hotel-actions {
+    margin-top: auto;
+}
+
+.choose-room-btn {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.choose-room-btn:hover {
+    background-color: #e55a2e;
+}
+
+ 
+/* Search Button Loading State */
+.search-button {
+    background-color: #ff6b35;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-button:hover:not(:disabled) {
+    background-color: #e55a2e;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.search-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.search-button.loading {
+    background-color: #ff6b35;
+    color: white;
+}
+
+.button-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Enhanced Search Loading Indicator */
+.search-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    margin: 20px 0;
+    min-height: 300px;
+}
+
+.loading-spinner-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #e3f2fd;
+    border-top: 4px solid #ff6b35;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text h3 {
+    color: #333;
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.loading-text p {
+    color: #666;
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    text-align: center;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ff6b35;
+    animation: pulse 1.4s ease-in-out infinite both;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes pulse {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Loading Steps */
+.loading-info {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.loading-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0.3;
+    transition: all 0.5s ease;
+}
+
+.loading-step.active {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.step-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    background: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.loading-step.active .step-icon {
+    background: linear-gradient(135deg, #ff6b35, #ff8a50);
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+
+.loading-step span {
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    font-weight: 500;
+}
+
+.loading-step.active span {
+    color: #ff6b35;
+    font-weight: 600;
+}
+
+/* Responsive Loading */
+ 
+
+/* Loading States */
+.hotel-card-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Error States */
+.hotel-card-error {
+    border-color: #ffcdd2;
+    background-color: #fafafa;
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Loading and Error States */
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* Hotel Card Styles */
+
+.hotel-card {
+    display: flex;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hotel-card.enhanced {
+    border-left: 4px solid var(--primary-color, #007cba);
+}
+
+.hotel-card.basic {
+    border-left: 4px solid #ffa500;
+    background-color: #fff9e6;
+}
+
+.hotel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.hotel-image {
+    width: 200px;
+    min-width: 200px;
+    height: 150px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+}
+
+.hotel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.hotel-image img:hover {
+    transform: scale(1.05);
+}
+
+.hotel-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hotel-image {
+    width: 30%;
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hotel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hotel-info {
+    padding: 20px;
+    flex: 1;
+}
+
+.hotel-header {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.hotel-name {
+    font-size: 22px;
+    margin: 0 0 5px;
+    color: #333;
+    font-weight: 600;
+}
+
+.hotel-code {
+    font-size: 12px;
+    color: #888;
+    background-color: #f0f0f0;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.enhanced-badge {
+    font-size: 11px;
+    color: #fff;
+    background-color: var(--primary-color, #007cba);
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.hotel-details {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 5px;
+}
+
+.hotel-address {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.hotel-rating {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.star {
+    color: #ffd700;
+    font-size: 14px;
+    margin-right: 2px;
+}
+
+.rating-text {
+    font-size: 12px;
+    color: #666;
+    margin-left: 5px;
+}
+
+.hotel-facilities {
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.facilities-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.facilities-list {
+    color: #666;
+}
+
+.facilities-more {
+    color: var(--primary-color, #007cba);
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.hotel-rooms {
+    margin-top: 15px;
+}
+
+.hotel-rooms h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.room-option {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    border-left: 3px solid var(--primary-color, #007cba);
+}
+
+.room-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+    color: #333;
+}
+
+.room-inclusion {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.room-price {
+    font-weight: bold;
+    color: var(--primary-color, #007cba);
+    font-size: 14px;
+}
+
+.hotel-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+.btn-book-now {
+    background-color: var(--primary-color, #007cba);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-book-now:hover {
+    background-color: var(--secondary-color, #005a8a);
+}
+
+.hotel-location {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.hotel-location::before {
+    content: '📍';
+    margin-right: 5px;
+}
+
+.hotel-rating {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.star {
+    color: #ddd;
+    font-size: 18px;
+    margin-right: 2px;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
+.hotel-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.amenity {
+    background-color: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.hotel-price-section {
+    min-width: 200px;
+    border-left: 1px solid #eee;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+}
+
+.price-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 16px;
+}
+
+.current-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.price-includes {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.book-now-button {
+    display: block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.book-now-button:hover {
+    background-color: var(--secondary-color);
+}
+
+.no-results {
+    padding: 40px;
+    text-align: center;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+}
+
+.no-results h3 {
+    margin-top: 0;
+    color: #666;
+}
+
+.error-message {
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.page-numbers {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.page-numbers li {
+    margin: 0 5px;
+}
+
+.page-numbers a,
+.page-numbers span {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.page-numbers span.current {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+ 
+/* FINAL OVERRIDE - FORCE HORIZONTAL LAYOUT FOR HOTEL CARDS */
+/* This should override any other CSS that might be causing issues */
+.yatra-hotel-card,
+.hotel-search-results .yatra-hotel-card,
+.hotels-grid .yatra-hotel-card,
+div.yatra-hotel-card,
+div.hotel-search-results div.yatra-hotel-card,
+div.hotels-grid div.yatra-hotel-card {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+.yatra-hotel-card .hotel-image-section,
+.hotel-search-results .yatra-hotel-card .hotel-image-section,
+.hotels-grid .yatra-hotel-card .hotel-image-section {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    flex-shrink: 0 !important;
+}
+
+/* FINAL OVERRIDE: Ensure search results page uses correct layout */
+body.page #search-results.hotel-search-results .hotels-grid .yatra-hotel-card,
+body #search-results.hotel-search-results .hotels-grid .yatra-hotel-card,
+#search-results .hotels-grid .yatra-hotel-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    height: auto !important;
+    min-height: 180px !important;
+}
+
+/* Ensure search results container itself doesn't force column layout */
+#search-results.hotel-search-results,
+#search-results.hotel-search-results > *,
+#search-results .hotels-grid {
+    display: block !important;
+    width: 100% !important;
+}
+
+#search-results .hotels-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+}
+
+.yatra-hotel-card .hotel-pricing-section,
+.hotel-search-results .yatra-hotel-card .hotel-pricing-section,
+.hotels-grid .yatra-hotel-card .hotel-pricing-section {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    flex-shrink: 0 !important;
+}
+
+/* NUCLEAR OPTION: Force horizontal layout with maximum specificity */
+html body div#search-results.hotel-search-results div.hotels-grid div.yatra-hotel-card[data-hotel-code],
+html body div.hotel-search-results div.hotels-grid div.yatra-hotel-card[data-hotel-code],
+html body div.hotels-grid div.yatra-hotel-card[data-hotel-code],
+html body div.yatra-hotel-card[data-hotel-code],
+.yatra-hotel-card[data-hotel-code] {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    height: auto !important;
+    min-height: 180px !important;
+}
+
+/* Force sections to maintain proper flex layout */
+html body div.yatra-hotel-card[data-hotel-code] div.hotel-image-section,
+.yatra-hotel-card[data-hotel-code] .hotel-image-section {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    background-color: #f5f5f5 !important;
+}
+
+html body div.yatra-hotel-card[data-hotel-code] div.hotel-details-section,
+.yatra-hotel-card[data-hotel-code] .hotel-details-section {
+    flex: 1 !important;
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    background-color: #fff !important;
+}
+
+html body div.yatra-hotel-card[data-hotel-code] div.hotel-pricing-section,
+.yatra-hotel-card[data-hotel-code] .hotel-pricing-section {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+    background-color: #fff !important;
+}
+/* RESULTS PAGE STYLES */
+.hotel-results-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.search-header-compact {
+    background: white;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.search-form-compact {
+    display: flex;
+    gap: 16px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.search-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.search-field label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.search-field input,
+.search-field select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-modify-search {
+    background: #ff6b35;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    height: 42px;
+}
+
+.results-container {
+    padding: 30px 0;
+}
+
+.results-header {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.results-info h2 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    color: #333;
+}
+
+.results-info p {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+}
+
+.results-sort {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.results-sort select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* HORIZONTAL HOTEL CARDS */
+.yatra-hotel-card {
+    display: flex !important;
+    flex-direction: row !important;
+    background: white !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 12px !important;
+    margin-bottom: 20px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    min-height: 200px !important;
+    transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.yatra-hotel-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+.hotel-image-section {
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    height: 200px !important;
+    background: #f5f5f5 !important;
+    flex-shrink: 0 !important;
+}
+
+.hotel-details-section {
+    flex: 1 !important;
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+}
+
+.hotel-pricing-section {
+    width: 250px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
+    padding: 20px !important;
+    border-left: 1px solid #e0e0e0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+    background: #fafbfc !important;
+}
+
+.loading-container {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #ff6b35;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}

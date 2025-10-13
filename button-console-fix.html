@@ -1,0 +1,244 @@
+<!-- 
+TBO Hotels Direct Button Fix Injection
+
+Instructions:
+1. Copy all code between the <script> tags below
+2. Paste it into your browser's console while on the hotel results page
+3. Press Enter to execute
+4. Try clicking on a "Choose Room" button again
+-->
+
+<script>
+// TBO Hotels Button Fix - Direct Console Injection
+(function() {
+    console.log('TBO Hotels - Direct Console Button Fix Starting');
+    
+    // Configuration
+    var roomSelectionUrl = '/bookings/simple-room-selection.php';
+    
+    // Try different methods to find and fix buttons
+    fixButtonsByClass();
+    fixButtonsByText();
+    installGlobalHandler();
+    
+    // Method 1: Find buttons by class
+    function fixButtonsByClass() {
+        // Try different possible class names
+        var buttons = document.querySelectorAll('.choose-room-btn, .choose-room, .select-room-btn, [class*="room-btn"], [class*="book-now"]');
+        console.log('Found ' + buttons.length + ' buttons by class selector');
+        
+        for (var i = 0; i < buttons.length; i++) {
+            applyButtonFix(buttons[i]);
+        }
+    }
+    
+    // Method 2: Find buttons by text content
+    function fixButtonsByText() {
+        // Get all possible button elements
+        var elements = document.querySelectorAll('button, a, input[type="button"], input[type="submit"], .btn, .button');
+        var matchedButtons = [];
+        
+        for (var i = 0; i < elements.length; i++) {
+            var text = elements[i].textContent || elements[i].value || '';
+            if (text.toLowerCase().indexOf('choose room') !== -1 || 
+                text.toLowerCase().indexOf('select room') !== -1 ||
+                text.toLowerCase().indexOf('book now') !== -1) {
+                matchedButtons.push(elements[i]);
+            }
+        }
+        
+        console.log('Found ' + matchedButtons.length + ' buttons by text content');
+        
+        for (var j = 0; j < matchedButtons.length; j++) {
+            applyButtonFix(matchedButtons[j]);
+        }
+    }
+    
+    // Apply fix to a button
+    function applyButtonFix(button) {
+        console.log('Fixing button:', button);
+        
+        // Extract hotel data from button or containing elements
+        var hotelData = extractHotelData(button);
+        
+        // Create a new clone of the button to remove any existing handlers
+        var newButton = button.cloneNode(true);
+        
+        // Add our click handler
+        newButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Build the URL with the extracted data
+            var url = buildRoomSelectionUrl(hotelData);
+            
+            console.log('Redirecting to:', url);
+            window.location.href = url;
+            
+            return false;
+        });
+        
+        // Replace the original button
+        if (button.parentNode) {
+            button.parentNode.replaceChild(newButton, button);
+            console.log('Button fixed:', hotelData.hotelCode);
+        }
+    }
+    
+    // Extract hotel data from a button
+    function extractHotelData(button) {
+        var data = {};
+        
+        // Try to get data from button attributes
+        data.hotelCode = button.getAttribute('data-hotel-code') || 
+                       button.getAttribute('data-hotel-id');
+                       
+        data.cityCode = button.getAttribute('data-city-code') || 
+                      button.getAttribute('data-city-id');
+                      
+        data.checkIn = button.getAttribute('data-check-in');
+        data.checkOut = button.getAttribute('data-check-out');
+        data.adults = button.getAttribute('data-adults');
+        data.children = button.getAttribute('data-children');
+        data.rooms = button.getAttribute('data-rooms');
+        
+        // If hotel code not found, try to find it in parent elements
+        if (!data.hotelCode) {
+            var parent = button.parentElement;
+            var searchLevels = 4;  // Don't go too many levels up
+            
+            while (parent && searchLevels > 0) {
+                data.hotelCode = data.hotelCode || parent.getAttribute('data-hotel-code') || 
+                               parent.getAttribute('data-hotel-id');
+                               
+                data.cityCode = data.cityCode || parent.getAttribute('data-city-code') || 
+                              parent.getAttribute('data-city-id');
+                
+                parent = parent.parentElement;
+                searchLevels--;
+            }
+        }
+        
+        // Extract parameters from the current URL
+        var urlParams = getUrlParameters();
+        
+        // Use URL parameters as fallbacks
+        data.cityCode = data.cityCode || urlParams.city_code;
+        data.checkIn = data.checkIn || urlParams.check_in;
+        data.checkOut = data.checkOut || urlParams.check_out;
+        data.adults = data.adults || urlParams.adults;
+        data.children = data.children || urlParams.children;
+        data.rooms = data.rooms || urlParams.rooms;
+        
+        // Use defaults for any missing values
+        data.hotelCode = data.hotelCode || '12345';
+        data.cityCode = data.cityCode || '150184';
+        data.checkIn = data.checkIn || getCurrentDate();
+        data.checkOut = data.checkOut || getNextDayDate();
+        data.adults = data.adults || '2';
+        data.children = data.children || '0';
+        data.rooms = data.rooms || '1';
+        
+        return data;
+    }
+    
+    // Build the room selection URL
+    function buildRoomSelectionUrl(data) {
+        var url = roomSelectionUrl;
+        url += '?hotel_code=' + encodeURIComponent(data.hotelCode);
+        url += '&city_code=' + encodeURIComponent(data.cityCode);
+        url += '&check_in=' + encodeURIComponent(data.checkIn);
+        url += '&check_out=' + encodeURIComponent(data.checkOut);
+        url += '&adults=' + encodeURIComponent(data.adults);
+        url += '&children=' + encodeURIComponent(data.children);
+        url += '&rooms=' + encodeURIComponent(data.rooms);
+        
+        return url;
+    }
+    
+    // Get parameters from the current URL
+    function getUrlParameters() {
+        var params = {};
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+        }
+        
+        return params;
+    }
+    
+    // Get current date in YYYY-MM-DD format
+    function getCurrentDate() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        
+        return year + '-' + month + '-' + day;
+    }
+    
+    // Get next day date in YYYY-MM-DD format
+    function getNextDayDate() {
+        var date = new Date();
+        date.setDate(date.getDate() + 1);
+        
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        
+        return year + '-' + month + '-' + day;
+    }
+    
+    // Install a global event handler as a fallback
+    function installGlobalHandler() {
+        document.addEventListener('click', function(e) {
+            // Check if this might be a Choose Room button
+            var target = e.target;
+            var text = target.textContent || target.value || '';
+            
+            if (text.toLowerCase().indexOf('choose room') !== -1 ||
+                text.toLowerCase().indexOf('select room') !== -1 ||
+                text.toLowerCase().indexOf('book now') !== -1) {
+                
+                console.log('Global handler caught a room selection button click:', target);
+                
+                // Prevent default action
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Extract data and redirect
+                var hotelData = extractHotelData(target);
+                var url = buildRoomSelectionUrl(hotelData);
+                
+                console.log('Redirecting to:', url);
+                window.location.href = url;
+                
+                return false;
+            }
+        }, true);  // Use capture phase
+        
+        console.log('Global click handler installed as fallback');
+    }
+    
+    console.log('TBO Hotels - Direct Console Button Fix Complete');
+    alert('TBO Hotels Button Fix has been applied! "Choose Room" buttons should now work.');
+})();
+</script>
+
+<!-- Instructions for manual fix -->
+<div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-left: 5px solid #007bff;">
+    <h3>Manual Fix Instructions</h3>
+    <p>If you're experiencing issues with the "Choose Room" buttons, follow these steps:</p>
+    <ol>
+        <li>Right-click anywhere on the hotel results page</li>
+        <li>Select "Inspect" or "Inspect Element" from the context menu</li>
+        <li>Click on the "Console" tab in the developer tools</li>
+        <li>Copy the entire script above (between &lt;script&gt; tags)</li>
+        <li>Paste it into the console and press Enter</li>
+        <li>Try clicking a "Choose Room" button again</li>
+    </ol>
+    <p><strong>Note:</strong> This is a temporary fix. For a permanent solution, please contact the website administrator.</p>
+</div>

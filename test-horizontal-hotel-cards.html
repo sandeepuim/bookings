@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Card Layout Test - Horizontal Fix</title>
+    <link rel="stylesheet" href="wp-content/themes/tbo-hotels/assets/css/hotel-results.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-title {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        /* Force horizontal layout */
+        .yatra-hotel-card {
+            display: flex !important;
+            flex-direction: row !important;
+        }
+        
+        .debug-info {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">Hotel Card Horizontal Layout Test</h1>
+        
+        <div class="debug-info">
+            <strong>Layout Debug Info:</strong><br>
+            - Hotel cards should display horizontally (image-left, details-center, pricing-right)<br>
+            - Image section: 280px width<br>
+            - Details section: flex-grow to fill space<br>
+            - Pricing section: 220px width<br>
+            - Total minimum width: 800px
+        </div>
+        
+        <div class="hotel-search-results">
+            <div class="search-results-header">
+                <h2>Test Results - Horizontal Layout</h2>
+                <p>Testing hotel card horizontal display</p>
+            </div>
+            
+            <div class="hotels-grid">
+                <!-- Test Hotel Card 1 -->
+                <div class="yatra-hotel-card">
+                    <div class="hotel-image-section">
+                        <div class="image-loading-wrapper loaded">
+                            <img src="https://via.placeholder.com/280x200/4a90e2/ffffff?text=Hotel+Image" 
+                                 alt="Test Hotel" class="hotel-main-image" style="opacity: 1;">
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-details-section">
+                        <div class="hotel-header-row">
+                            <h3 class="hotel-name">Hilltone Hotel (Test)</h3>
+                            <div class="hotel-star-rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-location">
+                            <i class="location-icon">📍</i>
+                            <span>Post box No. 18 opposite bus stand, Mount Abu 307501 Rajasthan</span>
+                        </div>
+                        
+                        <div class="hotel-badges">
+                            <span class="badge eco-badge">ECO+</span>
+                            <span class="badge couple-badge">COUPLE FRIENDLY</span>
+                            <span class="badge wifi-badge">FREE WiFi</span>
+                        </div>
+                        
+                        <div class="hotel-amenities">
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Welllit path to entrance</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Wheelchair accessible pool</span>
+                            </div>
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Elevator</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-offers">
+                            <span class="offer-text">🔓 Unlock 17% Off every night - Limited Time Offer!</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-pricing-section">
+                        <div class="user-rating">
+                            <span class="rating-badge">Exceptional</span>
+                            <span class="rating-score">4.1</span>
+                            <div class="rating-reviews">2,847 reviews</div>
+                        </div>
+                        
+                        <div class="rooms-left">4 rooms left</div>
+                        
+                        <div class="pricing-info">
+                            <div class="discount-percent">17% off</div>
+                            <div class="original-price">₹346</div>
+                            <div class="current-price">₹ 13</div>
+                            <div class="price-details">+₹2 taxes & fees</div>
+                            <div class="per-night">per room per night</div>
+                        </div>
+                        
+                        <button class="choose-room-btn">CHOOSE ROOM</button>
+                    </div>
+                </div>
+                
+                <!-- Test Card 2 - Different content length -->
+                <div class="yatra-hotel-card">
+                    <div class="hotel-image-section">
+                        <div class="hotel-placeholder-image">🏨</div>
+                    </div>
+                    
+                    <div class="hotel-details-section">
+                        <div class="hotel-header-row">
+                            <h3 class="hotel-name">Shorter Hotel Name</h3>
+                            <div class="hotel-star-rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-location">
+                            <i class="location-icon">📍</i>
+                            <span>Short Address</span>
+                        </div>
+                        
+                        <div class="hotel-badges">
+                            <span class="badge wifi-badge">FREE WiFi</span>
+                        </div>
+                        
+                        <div class="hotel-amenities">
+                            <div class="amenity-item">
+                                <span class="amenity-check">✓</span>
+                                <span>Basic Amenity</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-pricing-section">
+                        <div class="user-rating">
+                            <span class="rating-badge">Good</span>
+                            <span class="rating-score">3.8</span>
+                            <div class="rating-reviews">245 reviews</div>
+                        </div>
+                        
+                        <div class="rooms-left">2 rooms left</div>
+                        
+                        <div class="pricing-info">
+                            <div class="current-price">₹ 1,500</div>
+                            <div class="per-night">per room per night</div>
+                        </div>
+                        
+                        <button class="choose-room-btn">CHOOSE ROOM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Test script to verify layout
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.yatra-hotel-card');
+            console.log('Hotel cards found:', cards.length);
+            
+            cards.forEach((card, index) => {
+                const computedStyle = window.getComputedStyle(card);
+                console.log(`Card ${index + 1}:`, {
+                    display: computedStyle.display,
+                    flexDirection: computedStyle.flexDirection,
+                    width: computedStyle.width
+                });
+                
+                const imageSection = card.querySelector('.hotel-image-section');
+                const detailsSection = card.querySelector('.hotel-details-section');
+                const pricingSection = card.querySelector('.hotel-pricing-section');
+                
+                if (imageSection) {
+                    const imageStyle = window.getComputedStyle(imageSection);
+                    console.log(`  Image section width: ${imageStyle.width}`);
+                }
+                
+                if (pricingSection) {
+                    const pricingStyle = window.getComputedStyle(pricingSection);
+                    console.log(`  Pricing section width: ${pricingStyle.width}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

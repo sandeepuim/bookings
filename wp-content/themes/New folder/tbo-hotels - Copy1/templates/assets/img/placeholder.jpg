@@ -1,0 +1,7 @@
+/* This is a base64 encoded placeholder image */
+.placeholder-image {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iI2YxZjFmMSIvPjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTkiPk5vIEltYWdlIEF2YWlsYWJsZTwvdGV4dD48cGF0aCBkPSJNMzAwLDIwMCBMNTAwLDIwMCBMNDI1LDMwMCBMMzc1LDI1MCBMMzI1LDM1MCBMMjc1LDMwMCBaIiBmaWxsPSIjZGRkIi8+PGNpcmNsZSBjeD0iNTAwIiBjeT0iMTUwIiByPSIzMCIgZmlsbD0iI2RkZCIvPjwvc3ZnPg==');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

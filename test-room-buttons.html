@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Room Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .test-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .choose-room-btn {
+            background-color: #0071c2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .choose-room-btn:hover {
+            background-color: #005ea6;
+        }
+        .debug-section {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .debug-log {
+            height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Choose Room Button Test</h1>
+    
+    <p>This page is for testing the "Choose Room" button functionality. Click on any button below to test if it correctly redirects to the room selection page.</p>
+    
+    <div class="test-card">
+        <h2>Test Hotel 1</h2>
+        <p>Luxury hotel with swimming pool and restaurant</p>
+        <button class="choose-room-btn" 
+                data-hotel-code="1234" 
+                data-city-code="DEL" 
+                data-check-in="2023-12-01" 
+                data-check-out="2023-12-05" 
+                data-adults="2" 
+                data-children="0" 
+                data-rooms="1">
+            Choose Room (Standard Button)
+        </button>
+    </div>
+    
+    <div class="test-card">
+        <h2>Test Hotel 2</h2>
+        <p>Budget hotel near city center</p>
+        <button class="choose-room-btn" 
+                data-hotel-code="5678" 
+                data-city-code="BOM" 
+                data-check-in="2023-12-10" 
+                data-check-out="2023-12-15" 
+                data-adults="2" 
+                data-children="1" 
+                data-rooms="1"
+                onclick="window.location.href='hotel-room-selection.php?hotel_code=5678&city_code=BOM&check_in=2023-12-10&check_out=2023-12-15&adults=2&children=1&rooms=1'">
+            Choose Room (With Inline onclick)
+        </button>
+    </div>
+    
+    <div class="test-card">
+        <h2>Test Hotel 3</h2>
+        <p>Beachfront resort with spa services</p>
+        <form action="hotel-room-selection.php" method="get">
+            <input type="hidden" name="hotel_code" value="9012">
+            <input type="hidden" name="city_code" value="GOI">
+            <input type="hidden" name="check_in" value="2023-12-20">
+            <input type="hidden" name="check_out" value="2023-12-25">
+            <input type="hidden" name="adults" value="3">
+            <input type="hidden" name="children" value="2">
+            <input type="hidden" name="rooms" value="2">
+            <button type="submit" class="choose-room-btn">Choose Room (Form Submit)</button>
+        </form>
+    </div>
+    
+    <div class="test-card">
+        <h2>Test Hotel 4</h2>
+        <p>Mountain view hotel with fitness center</p>
+        <a href="hotel-room-selection.php?hotel_code=3456&city_code=SXR&check_in=2024-01-01&check_out=2024-01-05&adults=2&children=0&rooms=1" class="choose-room-btn" style="text-decoration: none; display: inline-block;">Choose Room (Anchor Link)</a>
+    </div>
+    
+    <div class="debug-section">
+        <h3>Debug Information</h3>
+        <p>View console logs to debug button clicks and redirects.</p>
+        <div class="debug-log" id="debugLog"></div>
+    </div>
+    
+    <script>
+        // Debug logger
+        function log(message) {
+            console.log(message);
+            var logElement = document.getElementById('debugLog');
+            var logEntry = document.createElement('div');
+            logEntry.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            logElement.appendChild(logEntry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // Log page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Page loaded successfully');
+            
+            // Add event listeners to all buttons
+            var buttons = document.querySelectorAll('.choose-room-btn');
+            buttons.forEach(function(button, index) {
+                if (!button.type || button.type !== 'submit') { // Skip form submit buttons
+                    button.addEventListener('click', function(e) {
+                        // Only prevent default if it's not already handled by inline onclick or it's not an anchor
+                        if (!this.onclick && this.tagName !== 'A') {
+                            e.preventDefault();
+                            
+                            // Log button click
+                            log('Button ' + (index + 1) + ' clicked');
+                            
+                            // Get data attributes
+                            var hotelCode = this.getAttribute('data-hotel-code');
+                            var cityCode = this.getAttribute('data-city-code');
+                            var checkIn = this.getAttribute('data-check-in');
+                            var checkOut = this.getAttribute('data-check-out');
+                            var adults = this.getAttribute('data-adults');
+                            var children = this.getAttribute('data-children');
+                            var rooms = this.getAttribute('data-rooms');
+                            
+                            // Log data
+                            log('Hotel Code: ' + hotelCode);
+                            log('City Code: ' + cityCode);
+                            
+                            // Create URL
+                            var url = 'hotel-room-selection.php?hotel_code=' + encodeURIComponent(hotelCode);
+                            url += '&city_code=' + encodeURIComponent(cityCode);
+                            url += '&check_in=' + encodeURIComponent(checkIn);
+                            url += '&check_out=' + encodeURIComponent(checkOut);
+                            url += '&adults=' + encodeURIComponent(adults);
+                            url += '&children=' + encodeURIComponent(children);
+                            url += '&rooms=' + encodeURIComponent(rooms);
+                            
+                            // Log URL
+                            log('Redirecting to: ' + url);
+                            
+                            // Redirect
+                            window.location.href = url;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

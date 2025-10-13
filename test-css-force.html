@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Force Test - Hotel Cards</title>
+    <link rel="stylesheet" href="wp-content/themes/tbo-hotels/assets/css/hotel-results.css?v=<?php echo time(); ?>">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .test-header {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .test-status {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .status-horizontal {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-vertical {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>Hotel Card Layout Force Test</h1>
+        <div id="layoutStatus" class="test-status">Checking layout...</div>
+    </div>
+    
+    <div class="hotel-search-results">
+        <div class="search-results-header">
+            <h2>Force Test Results</h2>
+            <p>This test should show horizontal hotel cards</p>
+        </div>
+        
+        <div class="hotels-grid">
+            <div class="yatra-hotel-card">
+                <div class="hotel-image-section">
+                    <div style="background: #4a90e2; color: white; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        280px IMAGE
+                    </div>
+                </div>
+                
+                <div class="hotel-details-section">
+                    <div class="hotel-header-row">
+                        <h3 class="hotel-name">Test Hotel - Force Horizontal</h3>
+                        <div class="hotel-star-rating">
+                            <span class="star">★★★</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-location">
+                        <span>This should be in the center section (flexible width)</span>
+                    </div>
+                    
+                    <div class="hotel-badges">
+                        <span class="badge eco-badge">FORCE</span>
+                        <span class="badge wifi-badge">HORIZONTAL</span>
+                    </div>
+                </div>
+                
+                <div class="hotel-pricing-section">
+                    <div style="background: #ff6b35; color: white; padding: 10px; text-align: center; font-weight: bold;">
+                        220px PRICING
+                    </div>
+                    
+                    <div class="pricing-info">
+                        <div class="current-price">₹ 1,500</div>
+                        <div class="per-night">per night</div>
+                    </div>
+                    
+                    <button class="choose-room-btn">CHOOSE ROOM</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        window.addEventListener('load', function() {
+            const card = document.querySelector('.yatra-hotel-card');
+            const statusEl = document.getElementById('layoutStatus');
+            
+            if (card) {
+                const computedStyle = window.getComputedStyle(card);
+                const flexDirection = computedStyle.flexDirection;
+                
+                console.log('Hotel card flex-direction:', flexDirection);
+                console.log('Hotel card display:', computedStyle.display);
+                
+                if (flexDirection === 'row') {
+                    statusEl.textContent = '✅ SUCCESS: Hotel card is horizontal (flex-direction: row)';
+                    statusEl.className = 'test-status status-horizontal';
+                } else {
+                    statusEl.textContent = '❌ FAILED: Hotel card is vertical (flex-direction: ' + flexDirection + ')';
+                    statusEl.className = 'test-status status-vertical';
+                }
+                
+                // Additional debugging
+                const imageSection = card.querySelector('.hotel-image-section');
+                const pricingSection = card.querySelector('.hotel-pricing-section');
+                
+                if (imageSection) {
+                    const imageStyle = window.getComputedStyle(imageSection);
+                    console.log('Image section width:', imageStyle.width);
+                }
+                
+                if (pricingSection) {
+                    const pricingStyle = window.getComputedStyle(pricingSection);
+                    console.log('Pricing section width:', pricingStyle.width);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
