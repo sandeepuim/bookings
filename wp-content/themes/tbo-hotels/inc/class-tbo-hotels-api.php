@@ -7,23 +7,46 @@ class TBO_Hotels_API {
      * Search for cities based on query
      */
     public function search_cities($query) {
-        $endpoint = 'SearchCityList';
+        $endpoint = 'GetDestinationSearchStateless';
         $data = [
-            'CountryName' => '', // Leave empty to search all countries
-            'CityName' => $query
+            "BookingType" => "hotel",
+            "SearchParameter" => $query,
+            "SearchType" => "All"
         ];
         
+        // Debug: Print request details
+        echo '<pre>';
+        echo "=== API Request Debug ===\n";
+        echo "Endpoint: " . $endpoint . "\n";
+        echo "Request Data:\n";
+        print_r($data);
+        echo '</pre>';
+        
         $response = tbo_hotels_api_request($endpoint, $data, 'POST');
+        
+        // Debug: Print raw response
+        echo '<pre>';
+        echo "=== API Response Debug ===\n";
+        echo "Raw Response:\n";
+        print_r($response);
+        
         if (is_wp_error($response)) {
+            echo "\nWP Error:\n";
+            print_r($response->get_error_messages());
+            echo '</pre>';
             throw new Exception($response->get_error_message());
         }
         
         $body = json_decode(wp_remote_retrieve_body($response));
-        if (!$body || !isset($body->Cities)) {
-            throw new Exception('Invalid response from API');
+        echo "\nParsed Response Body:\n";
+        print_r($body);
+        echo '</pre>';
+        
+        if (!$body || !isset($body->CityList)) {
+            throw new Exception('Invalid response from API - CityList not found');
         }
         
-        return $body->Cities;
+        return $body->CityList;
     }
     
     /**
@@ -36,14 +59,36 @@ class TBO_Hotels_API {
             'IsHotelNameSearch' => true
         ];
         
+        // Debug: Print request details
+        echo '<pre>';
+        echo "=== Hotel Search API Request Debug ===\n";
+        echo "Endpoint: " . $endpoint . "\n";
+        echo "Request Data:\n";
+        print_r($data);
+        echo '</pre>';
+        
         $response = tbo_hotels_api_request($endpoint, $data, 'POST');
+        
+        // Debug: Print raw response
+        echo '<pre>';
+        echo "=== Hotel Search API Response Debug ===\n";
+        echo "Raw Response:\n";
+        print_r($response);
+        
         if (is_wp_error($response)) {
+            echo "\nWP Error:\n";
+            print_r($response->get_error_messages());
+            echo '</pre>';
             throw new Exception($response->get_error_message());
         }
         
         $body = json_decode(wp_remote_retrieve_body($response));
+        echo "\nParsed Response Body:\n";
+        print_r($body);
+        echo '</pre>';
+        
         if (!$body || !isset($body->HotelResults)) {
-            throw new Exception('Invalid response from API');
+            throw new Exception('Invalid response from API - HotelResults not found');
         }
         
         return $body->HotelResults;
@@ -74,10 +119,21 @@ class TBO_Hotels_API {
         ];
         
         $response = tbo_hotels_api_request($endpoint, $data, 'POST');
+        echo '<pre>';
+        echo "=== API Debug Info ===\n";
+        echo "Endpoint: " . esc_html($endpoint) . "\n";
+        echo "Payload:\n";
+        print_r($data);
+        echo '</pre>';die();
+
         if (is_wp_error($response)) {
             throw new Exception($response->get_error_message());
         }
-        
+        // Debug: print raw response
+        echo '<pre>';
+        echo "Raw Response:\n";
+        print_r($response);
+        echo '</pre>';die();
         $body = json_decode(wp_remote_retrieve_body($response));
         if (!$body || !isset($body->HotelResults)) {
             throw new Exception('Invalid response from API');

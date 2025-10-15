@@ -5,28 +5,28 @@
 
 jQuery(document).ready(function($) {
     var searchState = {
+        countries: [],
         cities: [],
-        hotels: [],
-        searchResults: [],
-        searchTimeout: null
+        searchResults: []
     };
     
     // Cache DOM elements
     var $form = $('#hotel-search-form');
-    var $locationSearch = $('#location_search');
-    var $locationSuggestions = $('#location_suggestions');
-    var $selectedCityCode = $('#selected_city_code');
-    var $selectedHotelCode = $('#selected_hotel_code');
-    var $searchType = $('#search_type');
+    var $countrySelect = $('#country_code');
+    var $citySelect = $('#city_code');
     var $resultsContainer = $('#search-results');
     var $searchButton = $('.search-button-inline');
-    var $selectedLocation = $('.selected-location');
     
     // Initialize single-row form functionality
     initializeSingleRowForm();
     
-    // Initialize location search
-    initializeLocationSearch();
+    // Load countries on page load
+    loadCountries();
+    
+    // Set default to India
+    setTimeout(function() {
+        $countrySelect.val('IN').trigger('change');
+    }, 1000);
     
     // Country change handler
     $countrySelect.on('change', function() {

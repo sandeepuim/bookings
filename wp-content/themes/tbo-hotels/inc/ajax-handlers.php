@@ -3,17 +3,26 @@
  * TBO Hotels AJAX handlers for location search
  */
 
+// Hook up AJAX actions for both logged in and non-logged in users
+add_action('wp_ajax_search_locations', 'tbo_hotels_search_locations');
+add_action('wp_ajax_nopriv_search_locations', 'tbo_hotels_search_locations');
+
 /**
  * Search for cities and hotels based on user input
  */
 function tbo_hotels_search_locations() {
+    // Debug log
+    error_log('Search locations AJAX called with POST data: ' . print_r($_POST, true));
+    
     // Verify nonce
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tbo_hotels_nonce')) {
+        error_log('Nonce verification failed');
         wp_send_json_error(['message' => 'Invalid security token']);
     }
 
     // Get search query
     $query = isset($_POST['query']) ? sanitize_text_field($_POST['query']) : '';
+    error_log('Sanitized search query: ' . $query);
     if (empty($query)) {
         wp_send_json_error(['message' => 'Search query is required']);
     }
@@ -35,17 +44,17 @@ function tbo_hotels_search_locations() {
         $response_data = [
             'cities' => array_map(function($city) {
                 return [
-                    'code' => $city->code,
-                    'name' => $city->name,
-                    'country' => $city->country
+                    'code' => $city->DestinationId,
+                    'name' => $city->Destination,
+                    'country' => $city->Country
                 ];
             }, $cities),
             'hotels' => array_map(function($hotel) {
                 return [
-                    'code' => $hotel->code,
-                    'name' => $hotel->name,
-                    'city' => $hotel->city,
-                    'cityCode' => $hotel->cityCode
+                    'code' => $hotel->HotelCode,
+                    'name' => $hotel->HotelName,
+                    'city' => $hotel->CityName,
+                    'cityCode' => $hotel->CityId
                 ];
             }, $hotels)
         ];

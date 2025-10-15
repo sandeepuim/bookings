@@ -20,20 +20,16 @@ get_header();
                 <form id="hotel-search-form" class="hotel-search-form" method="post">
                     <div class="single-row-form">
                         <div class="form-group location-group">
-                            <label for="location_search"><?php esc_html_e('Select City, Location or Hotel Name', 'tbo-hotels'); ?></label>
+                            <label for="city_code"><?php esc_html_e('Select City, Location or Hotel Name', 'tbo-hotels'); ?></label>
                             <div class="location-selector">
-                                <div class="search-input-wrapper">
-                                    <input type="text" id="location_search" name="location_search" 
-                                           class="location-search-input" 
-                                           placeholder="<?php esc_html_e('Enter city or hotel name', 'tbo-hotels'); ?>"
-                                           autocomplete="off">
-                                    <input type="hidden" id="selected_city_code" name="city_code">
-                                    <input type="hidden" id="selected_hotel_code" name="hotel_code">
-                                    <input type="hidden" id="search_type" name="search_type" value="city">
-                                    <div id="location_suggestions" class="location-suggestions"></div>
-                                </div>
+                                <select id="country_code" name="country_code" required class="country-select">
+                                    <option value=""><?php esc_html_e('Select Country', 'tbo-hotels'); ?></option>
+                                </select>
+                                <select id="city_code" name="city_code" required class="city-select">
+                                    <option value=""><?php esc_html_e('Select City', 'tbo-hotels'); ?></option>
+                                </select>
                                 <div class="location-info">
-                                    <span class="selected-location"></span>
+                                    <span class="country-name">India</span>
                                 </div>
                             </div>
                         </div>

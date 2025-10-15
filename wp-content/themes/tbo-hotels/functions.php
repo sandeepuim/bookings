@@ -14,47 +14,6 @@ define('TBO_HOTELS_VERSION', '1.0.9');
 define('TBO_HOTELS_DIR', get_template_directory());
 define('TBO_HOTELS_URI', get_template_directory_uri());
 
-// Include required files
-require_once TBO_HOTELS_DIR . '/inc/class-tbo-hotels-api.php';
-require_once TBO_HOTELS_DIR . '/inc/ajax-handlers.php';
-
-/**
- * Enqueue scripts and styles
- */
-function tbo_hotels_enqueue_scripts() {
-    // Enqueue FontAwesome
-    wp_enqueue_style(
-        'fontawesome',
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css',
-        array(),
-        '5.15.4'
-    );
-    
-    // Enqueue theme styles
-    wp_enqueue_style(
-        'tbo-hotels-style',
-        TBO_HOTELS_URI . '/assets/css/hotel-search.css',
-        array(),
-        TBO_HOTELS_VERSION
-    );
-    
-    // Enqueue theme scripts
-    wp_enqueue_script(
-        'tbo-hotels-script',
-        TBO_HOTELS_URI . '/assets/js/hotel-search.js',
-        array('jquery'),
-        TBO_HOTELS_VERSION,
-        true
-    );
-    
-    // Localize script
-    wp_localize_script('tbo-hotels-script', 'tboHotels', array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('tbo_hotels_nonce')
-    ));
-}
-add_action('wp_enqueue_scripts', 'tbo_hotels_enqueue_scripts');
-
 // Define TBO API constants - Updated to match your exact API URLs
 define('TBO_API_BASE_URL', 'http://api.tbotechnology.in/TBOHolidays_HotelAPI');
 define('TBO_API_USERNAME', 'YOLANDATHTest');
